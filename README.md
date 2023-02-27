@@ -11,7 +11,7 @@
 -   [Webpack](https://webpack.js.org/)
 -   [Style and CSS loader](https://webpack.js.org/guides/asset-management/)
 -   [HtmlWebpackPlugin](https://webpack.js.org/guides/output-management/)
--   [Babel](https://jestjs.io/docs/getting-started#using-babel)
+-   [Babel](https://jestjs.io/docs/webpack#using-with-webpack)
 -   [Jest](https://jestjs.io/)
 
 ### Layout
