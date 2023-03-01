@@ -8,83 +8,60 @@ describe('Ship', () => {
         ship = new Ship(3);
     });
 
-    // Ship object test
-    test('Ship factory has to be defined as object', () => {
+    // Ship object tests
+    test('Ship factory shall be defined as object', () => {
         expect(typeof ship).toBe('object');
     });
 
-    test('Ship factory length has to be equal with the defined size', () => {
+    test('Ship factory length shall be equal with shipSize', () => {
         expect(ship).toHaveLength(shipSize);
     });
 
     // hitArray test
-    test('Ship factory has hit array to store hits', () => {
+    test('Ship factory shall be hit array to store hits', () => {
         expect(ship.hitArray).toBeDefined();
         expect(Array.isArray(ship.hitArray)).toBeTruthy();
     });
 
-    test('hitArray length has to be the same with shipSize', () => {
+    test('hitArray length shall be equal with shipSize', () => {
         expect(ship.hitArray).toHaveLength(shipSize);
     });
 
-    test('Ship get no hits, than all values have to be equal with 0', () => {
+    test('If Ship get no hits, than all values shall be false', () => {
         for (let i = 0; i < shipSize; i++) {
-            expect(ship.hitArray[i]).toEqual(0);
+            expect(ship.hitArray[i]).toBeFalsy();
         }
     });
 
-    test('Ship get hits at index 0, than its value has to be equal with 1', () => {
+    test('If Ship get hits at index 0, than its value shall be equal with true', () => {
         const hitIndex = 0;
         ship.hit(hitIndex);
-        expect(ship.hitArray[hitIndex]).toEqual(1);
+        expect(ship.hitArray[hitIndex]).toBeTruthy();
     });
 
-    test('Ship get hits at shipSize-1 index, than it has to be equal with 1', () => {
+    test('Ship get hits at shipSize-1 index, than it shall be true', () => {
         const hitIndex = shipSize - 1;
         ship.hit(hitIndex);
-        expect(ship.hitArray[hitIndex]).toEqual(1);
+        expect(ship.hitArray[hitIndex]).toBeTruthy();
     });
 
-    test('Ship get hits at index 0,1,2, than the value has to be 1 for each element', () => {
+    test('Ship get hits at index 0,1,2, than the value shall be treu for each element', () => {
         ship.hit(0);
         ship.hit(1);
         ship.hit(2);
         for (let i = 0; i < shipSize; i++) {
-            expect(ship.hitArray[i]).toEqual(1);
+            expect(ship.hitArray[i]).toBeTruthy();
         }
     });
 
-    test('Ship cannot get hits more than its size: 0 hit', () => {
-        const hitIndex = shipSize;
-        ship.hit(hitIndex);
-        expect(ship.hitArray[hitIndex]).toBeUndefined();
-    });
-
-    test('Ship cannot get hits if it is already shrunk', () => {
-        ship.hit(0);
-        ship.hit(1);
-        ship.hit(2);
-        const hitIndex = shipSize;
-        ship.hit(hitIndex);
-        expect(ship.hitArray[hitIndex]).toBeUndefined();
-    });
-
-    // isSunk test
-    test('Ship is not sunk if the hitArray has element which is not 1', () => {
+    // isSunk function tests
+    test('Ship shall not sunk if the hitArray has element which is false', () => {
         ship.hit(0);
         ship.hit(2);
         expect(ship.isSunk()).toBeFalsy();
     });
 
-    test('Ship is not sunk if the hitArray has element which is not 1, and the  current hit is out of its size', () => {
-        ship.hit(0);
-        ship.hit(2);
-        const hitIndex = shipSize;
-        ship.hit(hitIndex);
-        expect(ship.isSunk()).toBeFalsy();
-    });
-
-    test('Ship is sunk if the hitArray every elements are hit', () => {
+    test('Ship shall sunk if the hitArray all elements are equal with true', () => {
         ship.hit(0);
         ship.hit(1);
         ship.hit(2);

@@ -4,18 +4,16 @@ const Ship = (shipLength) => {
 
     (function populateHitArray() {
         for (let i = 0; i < length; i++) {
-            hitArray[i] = 0;
+            hitArray[i] = false;
         }
     })();
 
     const hit = (index) => {
-        if (index < length) {
-            hitArray[index] = 1;
-        }
+        hitArray[index] = true;
     };
 
     const isSunk = () => {
-        return hitArray.every((index) => index === 1);
+        return hitArray.every((index) => index === true);
     };
 
     return {
