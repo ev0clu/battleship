@@ -5,7 +5,7 @@ describe('Gameboard', () => {
     let gameboard = {};
 
     beforeEach(() => {
-        gameboard = new Gameboard();
+        gameboard = Gameboard();
     });
 
     // Gameboard tests
@@ -29,9 +29,23 @@ describe('Gameboard', () => {
             for (let j = 0; j < boardSize; j++) {
                 expect(gameboard.board[i][j].isShip).toEqual(false);
                 expect(gameboard.board[i][j].ship).toEqual({});
+                expect(gameboard.board[i][j].shipIndex).toEqual(null);
                 expect(gameboard.board[i][j].isHit).toEqual(false);
+                expect(gameboard.board[i][j].x).toEqual(i);
+                expect(gameboard.board[i][j].y).toEqual(j);
             }
         }
+    });
+
+    test('Gameboard cells shall be return the x,y coordinates correctly', () => {
+        expect(gameboard.board[0][5].x).toEqual(0);
+        expect(gameboard.board[3][9].y).toEqual(9);
+
+        expect(gameboard.board[7][0].x).toEqual(7);
+        expect(gameboard.board[6][2].y).toEqual(2);
+
+        expect(gameboard.board[1][9].x).toEqual(1);
+        expect(gameboard.board[9][5].y).toEqual(5);
     });
 
     // canPlaceShip function tests

@@ -5,7 +5,7 @@ describe('Ship', () => {
     const shipSize = 3;
 
     beforeEach(() => {
-        ship = new Ship(3);
+        ship = Ship(3);
     });
 
     // Ship object tests

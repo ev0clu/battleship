@@ -10,7 +10,9 @@ const Gameboard = () => {
                     isShip: false,
                     ship: {},
                     shipIndex: null,
-                    isHit: false
+                    isHit: false,
+                    x: i,
+                    y: j
                 };
                 board[i].push(object);
             }
