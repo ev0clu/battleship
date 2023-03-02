@@ -309,4 +309,34 @@ describe('Gameboard', () => {
 
         expect(gameboard.isAllShipsSunk()).toBeFalsy();
     });
+
+    // randomPlaceShip function tests
+    test('randomPlaceShip return x,y shall be between 0...9', () => {
+        const ship = Ship(2);
+
+        const { x, y } = gameboard.randomPlaceShip(ship);
+        expect(x).toBeGreaterThanOrEqual(0);
+        expect(x).toBeLessThanOrEqual(9);
+        expect(y).toBeGreaterThanOrEqual(0);
+        expect(y).toBeLessThanOrEqual(9);
+    });
+
+    test('randomPlaceShip return x,y shall be valid coordinate', () => {
+        const ship = Ship(2);
+        const boardSize = 10;
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
+                gameboard.board[i][j].isShip = true;
+            }
+        }
+        gameboard.board[0][0].isShip = false;
+        gameboard.board[0][1].isShip = false;
+        gameboard.board[1][0].isShip = false;
+        gameboard.board[1][1].isShip = false;
+        const { x, y } = gameboard.randomPlaceShip(ship);
+        expect(x).toBeGreaterThanOrEqual(0);
+        expect(x).toBeLessThanOrEqual(1);
+        expect(y).toBeGreaterThanOrEqual(0);
+        expect(y).toBeLessThanOrEqual(1);
+    });
 });
