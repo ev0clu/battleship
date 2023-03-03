@@ -5,6 +5,10 @@ import Player from './player';
 
 const controller = (() => {
     const initPage = () => {
+        ui.createHtml();
+    };
+
+    const randomShipPlacing = () => {
         const ShipOne = Ship(2);
         const ShipTwo = Ship(3);
         const ShipThree = Ship(3);
@@ -23,11 +27,10 @@ const controller = (() => {
         playerGameboard.randomPlaceShip(ShipFour);
         playerGameboard.randomPlaceShip(ShipFive);
 
-        ui.createHtml();
         ui.addShip(playerGameboard.board);
     };
 
-    return { initPage };
+    return { initPage, randomShipPlacing };
 })();
 
 export default controller;

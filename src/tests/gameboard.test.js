@@ -86,7 +86,7 @@ describe('Gameboard', () => {
         expect(gameboard.canPlaceShip(x, y, direction, ship)).toBeFalsy();
     });
 
-    test('Vertical Ship with length 5 shall not be put at any location, if a ship is already took that place', () => {
+    test('Vertical Ship with length 5 shall not be put at location which is already took by other ship', () => {
         const x = 0;
         const y = 0;
         const direction = 'vertical';
@@ -99,7 +99,7 @@ describe('Gameboard', () => {
 
     // canPlaceShip function tests
     // Horizontal
-    test('Horizontal Ship with length 2 shall be put at x = 9, y = 8.', () => {
+    test('Horizontal Ship with length 2 shall be put at x = 9, y = 8 if it free.', () => {
         const x = 9;
         const y = 8;
         const direction = 'horizontal';
@@ -108,7 +108,7 @@ describe('Gameboard', () => {
         expect(gameboard.canPlaceShip(x, y, direction, ship)).toBeTruthy();
     });
 
-    test('Horizontal Ship with length 2 shall not be put at x = 9, y = 9.', () => {
+    test('Horizontal Ship with length 2 shall not be put at x = 9, y = 9 because it is out of board.', () => {
         const x = 9;
         const y = 9;
         const direction = 'horizontal';
@@ -117,7 +117,7 @@ describe('Gameboard', () => {
         expect(gameboard.canPlaceShip(x, y, direction, ship)).toBeFalsy();
     });
 
-    test('Horizontal Ship with length 5 shall be put at x = 5, y = 5.', () => {
+    test('Horizontal Ship with length 5 shall be put at x = 5, y = 5 if it is free.', () => {
         const x = 5;
         const y = 5;
         const direction = 'horizontal';
@@ -126,9 +126,9 @@ describe('Gameboard', () => {
         expect(gameboard.canPlaceShip(x, y, direction, ship)).toBeTruthy();
     });
 
-    test('Horizontal Ship with length 5 shall not be put at x = 5, y = 6.', () => {
-        const x = 5;
-        const y = 6;
+    test('Horizontal Ship with length 5 shall not be put at x = 5, y = 6 because it is out of board', () => {
+        const x = 6;
+        const y = 5;
         const direction = 'horizontal';
         const ship = Ship(5);
 
@@ -311,12 +311,20 @@ describe('Gameboard', () => {
     });
 
     // randomPlaceShip function tests
-    test('randomPlaceShip return x,y shall be between 0...9', () => {
-        const ship = Ship(2);
+    test('randomPlaceShip shall take 17 cells', () => {
+        const ship1 = Ship(2);
+        const ship2 = Ship(3);
+        const ship3 = Ship(3);
+        const ship4 = Ship(4);
+        const ship5 = Ship(5);
         const boardSize = 10;
         let counter = 0;
 
-        gameboard.randomPlaceShip(ship);
+        gameboard.randomPlaceShip(ship1);
+        gameboard.randomPlaceShip(ship2);
+        gameboard.randomPlaceShip(ship3);
+        gameboard.randomPlaceShip(ship4);
+        gameboard.randomPlaceShip(ship5);
         for (let i = 0; i < boardSize; i++) {
             for (let j = 0; j < boardSize; j++) {
                 if (gameboard.board[i][j].isShip) {
@@ -325,6 +333,6 @@ describe('Gameboard', () => {
             }
         }
 
-        expect(counter).toEqual(2);
+        expect(counter).toEqual(17);
     });
 });
