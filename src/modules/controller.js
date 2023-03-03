@@ -8,26 +8,37 @@ const controller = (() => {
         ui.createHtml();
     };
 
-    const randomShipPlacing = () => {
-        const ShipOne = Ship(2);
-        const ShipTwo = Ship(3);
-        const ShipThree = Ship(3);
-        const ShipFour = Ship(4);
-        const ShipFive = Ship(5);
+    const createShips = () => {
+        const ships = [];
+        const Carrier = Ship(5);
+        const Battleship = Ship(4);
+        const Destroyer = Ship(3);
+        const Submarine = Ship(3);
+        const Patrol = Ship(2);
 
+        ships.push(Carrier, Battleship, Destroyer, Submarine, Patrol);
+
+        return ships;
+    };
+
+    const randomShipPlacing = () => {
         const player = Player();
         const computer = Player();
         const playerGameboard = Gameboard();
         const computerGameboard = Gameboard();
 
-        playerGameboard.randomPlaceShip(ShipOne);
-        playerGameboard.randomPlaceShip(ShipTwo);
-        playerGameboard.randomPlaceShip(ShipThree);
-        playerGameboard.randomPlaceShip(ShipThree);
-        playerGameboard.randomPlaceShip(ShipFour);
-        playerGameboard.randomPlaceShip(ShipFive);
+        const ships = createShips();
 
-        ui.addShip(playerGameboard.board);
+        ships.forEach((ship) => {
+            playerGameboard.randomPlaceShip(ship);
+        });
+
+        ships.forEach((ship) => {
+            computerGameboard.randomPlaceShip(ship);
+        });
+
+        ui.addShipToBoard('player', playerGameboard.board);
+        ui.addShipToBoard('computer', computerGameboard.board);
     };
 
     return { initPage, randomShipPlacing };

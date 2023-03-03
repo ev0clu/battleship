@@ -664,4 +664,64 @@ describe('Legal ship placing in vertical direction', () => {
 
         expect(gameboard.canPlaceShip(x, y, direction, ship)).toBeFalsy();
     });
+
+    test('Vertical Ship with length 2 shall not be put at location which is next to the other ship', () => {
+        const x = 3;
+        const y = 7;
+        const ship1 = Ship(3);
+        const ship2 = Ship(3);
+        const direction = 'vertical';
+        //  ________
+        // |        |
+        // |        |
+        // |       X|
+        // |      OX|
+        //  ¨¨¨¨¨¨¨¨
+
+        gameboard.board[x][y].isShip = true;
+        gameboard.board[x + 1][y].isShip = true;
+        gameboard.board[x + 2][y].isShip = true;
+
+        expect(gameboard.canPlaceShip(x + 3, y, direction, ship2)).toBeFalsy();
+    });
+});
+
+describe('Legal ship placing in vertical and horizontal direction', () => {
+    let gameboard = {};
+
+    beforeEach(() => {
+        gameboard = Gameboard();
+    });
+
+    test('Vertical Ship with length 2 shall not be put at location which is next to the other ship', () => {
+        const x = 8;
+        const y = 9;
+        const ship1 = Ship(2);
+        const ship2 = Ship(3);
+        const ship3 = Ship(3);
+        const ship4 = Ship(4);
+        const ship5 = Ship(5);
+
+        gameboard.randomPlaceShip(ship1);
+        gameboard.randomPlaceShip(ship2);
+        gameboard.randomPlaceShip(ship3);
+        gameboard.randomPlaceShip(ship4);
+        gameboard.randomPlaceShip(ship5);
+        //  ________
+        // |        |
+        // |        |
+        // |       X|
+        // |      OX|
+        //  ¨¨¨¨¨¨¨¨
+        let counter = 0;
+        gameboard.board.forEach((row) => {
+            row.forEach((column) => {
+                if (column.isShip) {
+                    counter += 1;
+                }
+            });
+        });
+
+        expect(counter).toEqual(17);
+    });
 });

@@ -179,7 +179,7 @@ const Gameboard = () => {
                 // |   ?X?  |
                 //  ¨¨¨¨¨¨¨¨
                 if (x === boardSize - newShip.length && y > 0 && y < 9) {
-                    if (board[x - 1][y].isShip.isShip) {
+                    if (board[x - 1][y].isShip) {
                         result = false;
                     } else {
                         for (let i = -1; i < newShip.length; i++) {
