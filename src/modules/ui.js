@@ -18,7 +18,7 @@ const ui = (() => {
         for (let i = 0; i < boardSize; i++) {
             for (let j = 0; j < boardSize; j++) {
                 const gridCell = document.createElement('div');
-                gridCell.setAttribute('class', 'cell');
+                gridCell.setAttribute('class', `cell-${id}`);
                 gridCell.setAttribute('data-x', `${i}`);
                 gridCell.setAttribute('data-y', `${j}`);
                 gameBoardContainer.appendChild(gridCell);
@@ -97,7 +97,29 @@ const ui = (() => {
         body.append(createHeader(), createMain(), createFooter());
     };
 
-    return { createHtml };
+    const addShip = (board) => {
+        const cell = document.querySelectorAll('.cell-player-board');
+
+        board.forEach((row) => {
+            row.forEach((column) => {
+                if (column.isShip) {
+                    for (let i = 0; i < cell.length; i++) {
+                        // console.log('cell-x', cell[i].getAttribute('data-x'), column.x);
+                        // console.log('cell-y', cell[i].getAttribute('data-y'), column.y);
+                        if (
+                            Number(cell[i].getAttribute('data-x')) === column.x &&
+                            Number(cell[i].getAttribute('data-y')) === column.y
+                        ) {
+                            cell[i].classList.add('ship');
+                            break;
+                        }
+                    }
+                }
+            });
+        });
+    };
+
+    return { createHtml, addShip };
 })();
 
 export default ui;

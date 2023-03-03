@@ -96,27 +96,27 @@ const Gameboard = () => {
     };
 
     const randomCoordinate = () => {
-        const xPos = Math.floor(Math.random() * 10);
-        const yPos = Math.floor(Math.random() * 10);
+        const x = Math.floor(Math.random() * 10);
+        const y = Math.floor(Math.random() * 10);
 
-        return { xPos, yPos };
+        return { x, y };
     };
 
     const randomPlaceShip = (newShip) => {
         const direction = randomDirection();
         let placeShip = false;
-        let x = 0;
-        let y = 0;
 
         while (!placeShip) {
-            const { xPos, yPos } = randomCoordinate();
-            if (canPlaceShip(xPos, yPos, direction, newShip)) {
-                x = xPos;
-                y = yPos;
+            const { x, y } = randomCoordinate();
+            if (canPlaceShip(x, y, direction, newShip)) {
+                if (direction === 'vertical') {
+                    placeShipVertical(x, y, newShip);
+                } else if (direction === 'horizontal') {
+                    placeShipHorizontal(x, y, newShip);
+                }
                 placeShip = true;
             }
         }
-        return { x, y };
     };
 
     return {
