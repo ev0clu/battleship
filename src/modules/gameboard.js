@@ -24,10 +24,195 @@ const Gameboard = () => {
 
         if (direction === 'vertical') {
             if (x <= boardSize - newShip.length) {
+                // check ship location
                 for (let i = 0; i < newShip.length; i++) {
                     if (board[x + i][y].isShip) {
                         result = false;
                         break;
+                    }
+                }
+                //  ________
+                // |X?      |
+                // |X?      |
+                // |??      |
+                // |        |
+                //  ¨¨¨¨¨¨¨¨
+                if (x === 0 && y === 0) {
+                    if (board[x + newShip.length][y].isShip) {
+                        result = false;
+                    } else {
+                        for (let i = 0; i < newShip.length + 1; i++) {
+                            if (board[x + i][y + 1].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                //  ________
+                // | ?X?    |
+                // | ?X?    |
+                // | ???    |
+                // |        |
+                //  ¨¨¨¨¨¨¨¨
+                if (x === 0 && y > 0 && y < 9) {
+                    if (board[x + newShip.length][y].isShip) {
+                        result = false;
+                    } else {
+                        for (let i = 0; i < newShip.length + 1; i++) {
+                            if (board[x + i][y - 1].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                        for (let i = 0; i < newShip.length + 1; i++) {
+                            if (board[x + i][y + 1].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                //  ________
+                // |      ?X|
+                // |      ?X|
+                // |      ??|
+                // |        |
+                //  ¨¨¨¨¨¨¨¨
+                if (x === 0 && y === 9) {
+                    if (board[x + newShip.length][y].isShip) {
+                        result = false;
+                    } else {
+                        for (let i = 0; i < newShip.length + 1; i++) {
+                            if (board[x + i][y - 1].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                //  ________
+                // |??      |
+                // |X?      |
+                // |X?      |
+                // |??      |
+                //  ¨¨¨¨¨¨¨¨
+                if (x > 0 && x < boardSize - newShip.length && y === 0) {
+                    if (board[x - 1][y].isShip || board[x + newShip.length][y].isShip) {
+                        result = false;
+                    } else {
+                        for (let i = -1; i < newShip.length + 1; i++) {
+                            if (board[x + i][y + 1].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                //  ________
+                // | ???    |
+                // | ?X?    |
+                // | ?X?    |
+                // | ???    |
+                //  ¨¨¨¨¨¨¨¨
+                if (x > 0 && x < boardSize - newShip.length && y > 0 && y < 9) {
+                    if (board[x - 1][y].isShip || board[x + newShip.length][y].isShip) {
+                        result = false;
+                    } else {
+                        for (let i = -1; i < newShip.length + 1; i++) {
+                            if (board[x + i][y - 1].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                        for (let i = -1; i < newShip.length + 1; i++) {
+                            if (board[x + i][y + 1].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                //  ________
+                // |      ??|
+                // |      ?X|
+                // |      ?X|
+                // |      ??|
+                //  ¨¨¨¨¨¨¨¨
+                if (x > 0 && x < boardSize - newShip.length && y === 9) {
+                    if (board[x - 1][y].isShip || board[x + newShip.length][y].isShip) {
+                        result = false;
+                    } else {
+                        for (let i = -1; i < newShip.length + 1; i++) {
+                            if (board[x + i][y - 1].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                //  ________
+                // |        |
+                // |??      |
+                // |X?      |
+                // |X?      |
+                //  ¨¨¨¨¨¨¨¨
+                if (x === boardSize - newShip.length && y === 0) {
+                    if (board[x - 1][y].isShip) {
+                        result = false;
+                    } else {
+                        for (let i = -1; i < newShip.length; i++) {
+                            if (board[x + i][y + 1].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                //  ________
+                // |        |
+                // |   ???  |
+                // |   ?X?  |
+                // |   ?X?  |
+                //  ¨¨¨¨¨¨¨¨
+                if (x === boardSize - newShip.length && y > 0 && y < 9) {
+                    if (board[x - 1][y].isShip.isShip) {
+                        result = false;
+                    } else {
+                        for (let i = -1; i < newShip.length; i++) {
+                            if (board[x + i][y - 1].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                        for (let i = -1; i < newShip.length; i++) {
+                            if (board[x + i][y + 1].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                //  ________
+                // |        |
+                // |      ??|
+                // |      ?X|
+                // |      ?X|
+                //  ¨¨¨¨¨¨¨¨
+                if (x === boardSize - newShip.length && y === 9) {
+                    if (board[x - 1][y].isShip) {
+                        result = false;
+                    } else {
+                        for (let i = -1; i < newShip.length; i++) {
+                            if (board[x + i][y - 1].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
                     }
                 }
             } else {
@@ -35,10 +220,186 @@ const Gameboard = () => {
             }
         } else if (direction === 'horizontal') {
             if (y <= boardSize - newShip.length) {
+                // check if ship placing location is free
                 for (let i = 0; i < newShip.length; i++) {
                     if (board[x][y + i].isShip) {
                         result = false;
                         break;
+                    }
+                }
+                //  ________
+                // |XX?     |
+                // |???     |
+                // |        |
+                //  ¨¨¨¨¨¨¨¨
+                if (x === 0 && y === 0) {
+                    if (board[x][y + newShip.length].isShip) {
+                        result = false;
+                    } else {
+                        for (let i = 0; i < newShip.length + 1; i++) {
+                            if (board[x + 1][y + i].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                //  ________
+                // |?XX?    |
+                // |????    |
+                // |        |
+                //  ¨¨¨¨¨¨¨¨
+                if (x === 0 && y > 0 && y < boardSize - newShip.length) {
+                    if (board[x][y - 1].isShip || board[x][y + newShip.length].isShip) {
+                        result = false;
+                    } else {
+                        for (let i = -1; i < newShip.length + 1; i++) {
+                            if (board[x + 1][y + i].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                //  ________
+                // |     ?XX|
+                // |     ???|
+                // |        |
+                //  ¨¨¨¨¨¨¨¨
+                if (x === 0 && y === boardSize - newShip.length) {
+                    if (board[x][y - 1].isShip) {
+                        result = false;
+                    } else {
+                        for (let i = -1; i < newShip.length; i++) {
+                            if (board[x + 1][y + i].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                //  ________
+                // |???     |
+                // |XX?     |
+                // |???     |
+                //  ¨¨¨¨¨¨¨¨
+                if (x > 0 && x < 9 && y === 0) {
+                    if (board[x][y + newShip.length].isShip) {
+                        result = false;
+                    } else {
+                        for (let i = 0; i < newShip.length + 1; i++) {
+                            if (board[x - 1][y + i].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                        for (let i = 0; i < newShip.length + 1; i++) {
+                            if (board[x + 1][y + i].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                //  ________
+                // | ????   |
+                // | ?XX?   |
+                // | ????   |
+                //  ¨¨¨¨¨¨¨¨
+                if (x > 0 && x < 9 && y > 0 && y < boardSize - newShip.length) {
+                    if (board[x][y - 1].isShip || board[x][y + newShip.length].isShip) {
+                        result = false;
+                    } else {
+                        for (let i = -1; i < newShip.length + 1; i++) {
+                            if (board[x - 1][y + i].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                        for (let i = -1; i < newShip.length + 1; i++) {
+                            if (board[x + 1][y + i].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                //  ________
+                // |     ???|
+                // |     ?XX|
+                // |     ???|
+                //  ¨¨¨¨¨¨¨¨
+                if (x > 0 && x < 9 && y === boardSize - newShip.length) {
+                    if (board[x][y - 1].isShip) {
+                        result = false;
+                    } else {
+                        for (let i = -1; i < newShip.length; i++) {
+                            if (board[x - 1][y + i].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                        for (let i = -1; i < newShip.length; i++) {
+                            if (board[x + 1][y + i].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                //  ________
+                // |        |
+                // |???     |
+                // |XX?     |
+                //  ¨¨¨¨¨¨¨¨
+                if (x === 9 && y === 0) {
+                    if (board[x][y + newShip.length].isShip) {
+                        result = false;
+                    } else {
+                        for (let i = 0; i < newShip.length + 1; i++) {
+                            if (board[x - 1][y + i].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                //  ________
+                // |        |
+                // |  ????  |
+                // |  ?XX?  |
+                //  ¨¨¨¨¨¨¨¨
+                if (x === 9 && y > 0 && y < boardSize - newShip.length) {
+                    if (board[x][y - 1].isShip || board[x][y + newShip.length].isShip) {
+                        result = false;
+                    } else {
+                        for (let i = -1; i < newShip.length + 1; i++) {
+                            if (board[x - 1][y + i].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                //  ________
+                // |        |
+                // |     ???|
+                // |     ?XX|
+                //  ¨¨¨¨¨¨¨¨
+                if (x === 9 && y === boardSize - newShip.length) {
+                    if (board[x][y - 1].isShip) {
+                        result = false;
+                    } else {
+                        for (let i = -1; i < newShip.length; i++) {
+                            if (board[x - 1][y + i].isShip) {
+                                result = false;
+                                break;
+                            }
+                        }
                     }
                 }
             } else {
