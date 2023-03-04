@@ -92,7 +92,7 @@ const ui = (() => {
         return footer;
     };
 
-    const createHtml = () => {
+    const renderPage = () => {
         const body = document.querySelector('body');
         body.append(createHeader(), createMain(), createFooter());
     };
@@ -111,8 +111,6 @@ const ui = (() => {
             row.forEach((column) => {
                 if (column.isShip) {
                     for (let i = 0; i < cell.length; i++) {
-                        // console.log('cell-x', cell[i].getAttribute('data-x'), column.x);
-                        // console.log('cell-y', cell[i].getAttribute('data-y'), column.y);
                         if (
                             Number(cell[i].getAttribute('data-x')) === column.x &&
                             Number(cell[i].getAttribute('data-y')) === column.y
@@ -126,7 +124,7 @@ const ui = (() => {
         });
     };
 
-    return { createHtml, addShipToBoard };
+    return { renderPage, addShipToBoard };
 })();
 
 export default ui;
