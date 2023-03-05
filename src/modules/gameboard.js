@@ -19,6 +19,17 @@ const Gameboard = () => {
         }
     })();
 
+    const resetBoard = () => {
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
+                board[i][j].isShip = false;
+                board[i][j].ship = {};
+                board[i][j].shipIndex = null;
+                board[i][j].isHit = false;
+            }
+        }
+    };
+
     const canPlaceShip = (x, y, direction, newShip) => {
         let result = true;
 
@@ -484,6 +495,7 @@ const Gameboard = () => {
         get board() {
             return board;
         },
+        resetBoard,
         canPlaceShip,
         placeShipVertical,
         placeShipHorizontal,

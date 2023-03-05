@@ -14,6 +14,11 @@ const game = (() => {
         computer.isMyTurn = false;
     };
 
+    const restartGame = () => {
+        playerGameboard.resetBoard();
+        computerGameboard.resetBoard();
+    };
+
     const isPlayerTurn = () => {
         if (player.isMyTurn) {
             return true;
@@ -26,14 +31,15 @@ const game = (() => {
     };
 
     const isCoordinateFree = (board, x, y) => {
-        if (board === 'computer') {
-            if (!computerGameboard.board[x][y].isHit) {
-                return true;
-            }
-            return false;
-        }
         if (board === 'player') {
             if (!playerGameboard.board[x][y].isHit) {
+                return true;
+            }
+
+            return false;
+        }
+        if (board === 'computer') {
+            if (!computerGameboard.board[x][y].isHit) {
                 return true;
             }
             return false;
@@ -88,6 +94,7 @@ const game = (() => {
 
     return {
         initGame,
+        restartGame,
         isPlayerTurn,
         changeTurn,
         isCoordinateFree,

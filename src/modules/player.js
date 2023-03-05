@@ -20,7 +20,6 @@ const Player = () => {
             });
         });
         const randomElement = Math.floor(Math.random() * emptyCoordinates.length);
-
         return emptyCoordinates[randomElement];
     };
 

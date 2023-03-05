@@ -50,6 +50,11 @@ const ui = (() => {
         return turnInfo;
     };
 
+    const toggleCursorStatus = () => {
+        const computerBoard = document.getElementById('computer-board');
+        computerBoard.classList.toggle('board-inactive');
+    };
+
     const toggleRestartButton = () => {
         const restartButton = document.getElementById('btn-restart');
         restartButton.classList.toggle('btn-restart-inactive');
@@ -176,13 +181,52 @@ const ui = (() => {
             showWinnerInformaion('Computer won!');
         }
         toggleRestartButton();
+        toggleCursorStatus();
+    };
+
+    const clearBoard = () => {
+        const cellPlayerBoard = document.querySelectorAll('.cell-player-board');
+        const cellComputerBoard = document.querySelectorAll('.cell-computer-board');
+
+        cellPlayerBoard.forEach((cell) => {
+            if (cell.classList.contains('ship')) {
+                cell.classList.remove('ship');
+            }
+            if (cell.classList.contains('hit')) {
+                cell.classList.remove('hit');
+            }
+            if (cell.classList.contains('miss')) {
+                cell.classList.remove('miss');
+            }
+        });
+
+        cellComputerBoard.forEach((cell) => {
+            if (cell.classList.contains('ship')) {
+                cell.classList.remove('ship');
+            }
+            if (cell.classList.contains('hit')) {
+                cell.classList.remove('hit');
+            }
+            if (cell.classList.contains('miss')) {
+                cell.classList.remove('miss');
+            }
+        });
+    };
+
+    const setNewGameUI = () => {
+        toggleRestartButton();
+        toggleCursorStatus();
+        clearBoard();
+        changeTurnInformation('player');
+        showWinnerInformaion('');
     };
 
     return {
         renderPage,
         addShipToBoard,
         changeTurnInformation,
-        setGameoverUI
+        setGameoverUI,
+        setNewGameUI
     };
 })();
 

@@ -5,7 +5,9 @@ const controller = (() => {
     const restartEvent = () => {
         const restartButton = document.getElementById('btn-restart');
         restartButton.addEventListener('click', () => {
-            // resetBoard();
+            ui.setNewGameUI();
+            game.restartGame();
+            game.randomShipPlacing();
         });
     };
 
@@ -28,8 +30,6 @@ const controller = (() => {
                         cell.classList.add('hit');
                         if (game.isGameOver()) {
                             ui.setGameoverUI('computer');
-                            //cursor inactivate
-                            //restart button
                         }
                         computerEvent();
                     } else {
@@ -55,9 +55,6 @@ const controller = (() => {
                             event.target.classList.add('hit');
                             if (game.isGameOver()) {
                                 ui.setGameoverUI('player');
-
-                                //cursor inactivate
-                                //restart button
                             }
                         } else {
                             event.target.classList.add('miss');
