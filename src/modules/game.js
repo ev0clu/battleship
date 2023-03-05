@@ -47,11 +47,11 @@ const game = (() => {
         return computerGameboard.receiveAttack(x, y);
     };
 
-    const isShipSunk = (board, x, y) => {
-        if (board === 'player') {
-            return playerGameboard.board[x][y].ship.isSunk();
+    const isGameOver = () => {
+        if (playerGameboard.isAllShipsSunk() || computerGameboard.isAllShipsSunk()) {
+            return true;
         }
-        return computerGameboard.board[x][y].ship.isSunk();
+        return false;
     };
 
     const computerRandomAttack = () => {
@@ -92,7 +92,7 @@ const game = (() => {
         changeTurn,
         isCoordinateFree,
         isShipHit,
-        isShipSunk,
+        isGameOver,
         computerRandomAttack,
         randomShipPlacing
     };

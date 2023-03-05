@@ -28,6 +28,20 @@ const ui = (() => {
         return gameBoardContainer;
     };
 
+    const showWinnerInformaion = (winner) => {
+        const winnerInfo = document.getElementById('winner-info');
+        winnerInfo.textContent = winner;
+
+        return winnerInfo;
+    };
+
+    const createWinnerInformaion = () => {
+        const winnerInfo = document.createElement('div');
+        winnerInfo.id = 'winner-info';
+
+        return winnerInfo;
+    };
+
     const createTurnInformaion = () => {
         const turnInfo = document.createElement('div');
         turnInfo.id = 'turn-info';
@@ -36,11 +50,29 @@ const ui = (() => {
         return turnInfo;
     };
 
+    const toggleRestartButton = () => {
+        const restartButton = document.getElementById('btn-restart');
+        restartButton.classList.toggle('btn-restart-inactive');
+    };
+
+    const createRestartButton = () => {
+        const restartButton = document.createElement('button');
+        restartButton.id = 'btn-restart';
+        restartButton.classList.add('btn-restart-inactive');
+        restartButton.textContent = 'Restart';
+
+        return restartButton;
+    };
+
     const createMiddleContainer = () => {
         const middleContainer = document.createElement('div');
         middleContainer.id = 'middle-container';
 
-        middleContainer.appendChild(createTurnInformaion());
+        middleContainer.append(
+            createWinnerInformaion(),
+            createTurnInformaion(),
+            createRestartButton()
+        );
 
         return middleContainer;
     };
@@ -124,7 +156,34 @@ const ui = (() => {
         });
     };
 
-    return { renderPage, addShipToBoard };
+    const changeTurnInformation = (turn) => {
+        const turnInfo = document.getElementById('turn-info');
+        turnInfo.textContent = '';
+        if (turn === 'player') {
+            turnInfo.textContent = 'Your Turn';
+        } else if (turn === 'computer') {
+            turnInfo.textContent = 'Computer Turn';
+        } else if (turn === 'over') {
+            turnInfo.textContent = 'Game Over';
+        }
+    };
+
+    const setGameoverUI = (winner) => {
+        changeTurnInformation('over');
+        if (winner === 'player') {
+            showWinnerInformaion('You won!');
+        } else {
+            showWinnerInformaion('Computer won!');
+        }
+        toggleRestartButton();
+    };
+
+    return {
+        renderPage,
+        addShipToBoard,
+        changeTurnInformation,
+        setGameoverUI
+    };
 })();
 
 export default ui;
