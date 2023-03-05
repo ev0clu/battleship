@@ -48,11 +48,13 @@ const controller = (() => {
         computerCell.forEach((cell) => {
             cell.addEventListener('click', (event) => {
                 if (game.isPlayerTurn()) {
-                    const x = event.target.getAttribute('data-x');
-                    const y = event.target.getAttribute('data-y');
+                    const x = Number(event.target.getAttribute('data-x'));
+                    const y = Number(event.target.getAttribute('data-y'));
                     if (game.isCoordinateFree('computer', x, y)) {
                         if (game.isShipHit('computer', x, y)) {
                             event.target.classList.add('hit');
+                            game.isShipSunk('computer', x, y);
+
                             if (game.isGameOver()) {
                                 ui.setGameoverUI('player');
                             }

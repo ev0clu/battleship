@@ -161,6 +161,33 @@ const ui = (() => {
         });
     };
 
+    const markShipAround = (boardSelector, board) => {
+        const cellPlayerBoard = document.querySelectorAll('.cell-player-board');
+        const cellComputerBoard = document.querySelectorAll('.cell-computer-board');
+        let cell = '';
+
+        if (boardSelector === 'player') {
+            cell = cellPlayerBoard;
+        } else if (boardSelector === 'computer') {
+            cell = cellComputerBoard;
+        }
+        board.forEach((row) => {
+            row.forEach((column) => {
+                if (!column.isShip && column.isHit) {
+                    for (let i = 0; i < cell.length; i++) {
+                        if (
+                            Number(cell[i].getAttribute('data-x')) === column.x &&
+                            Number(cell[i].getAttribute('data-y')) === column.y
+                        ) {
+                            cell[i].classList.add('miss');
+                            break;
+                        }
+                    }
+                }
+            });
+        });
+    };
+
     const changeTurnInformation = (turn) => {
         const turnInfo = document.getElementById('turn-info');
         turnInfo.textContent = '';
@@ -226,7 +253,8 @@ const ui = (() => {
         addShipToBoard,
         changeTurnInformation,
         setGameoverUI,
-        setNewGameUI
+        setNewGameUI,
+        markShipAround
     };
 })();
 

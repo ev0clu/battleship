@@ -12,7 +12,8 @@ const Gameboard = () => {
                     shipIndex: null,
                     isHit: false,
                     x: i,
-                    y: j
+                    y: j,
+                    direction: ''
                 };
                 board[i].push(object);
             }
@@ -26,6 +27,7 @@ const Gameboard = () => {
                 board[i][j].ship = {};
                 board[i][j].shipIndex = null;
                 board[i][j].isHit = false;
+                board[i][j].direction = '';
             }
         }
     };
@@ -420,19 +422,21 @@ const Gameboard = () => {
         return result;
     };
 
-    const placeShipVertical = (x, y, newShip) => {
+    const placeShipVertical = (x, y, newShip, orientation) => {
         for (let i = 0; i < newShip.length; i++) {
             board[x + i][y].isShip = true;
             board[x + i][y].ship = newShip;
             board[x + i][y].shipIndex = i;
+            board[x + i][y].direction = orientation;
         }
     };
 
-    const placeShipHorizontal = (x, y, newShip) => {
+    const placeShipHorizontal = (x, y, newShip, orientation) => {
         for (let i = 0; i < newShip.length; i++) {
             board[x][y + i].isShip = true;
             board[x][y + i].ship = newShip;
             board[x][y + i].shipIndex = i;
+            board[x][y + i].direction = orientation;
         }
     };
 
@@ -444,6 +448,89 @@ const Gameboard = () => {
         }
         board[x][y].isHit = true;
         return false;
+    };
+
+    const shipSunk = (x, y) => {
+        const index = board[x][y].shipIndex;
+        const shipLength = board[x][y].ship.length;
+
+        if (board[x][y].direction === 'vertical') {
+            const shipUp = x - index - 1;
+            const shipDown = x + shipLength - index;
+            if (shipUp >= 0 && shipDown < boardSize) {
+                board[shipUp][y].isHit = true;
+                board[shipDown][y].isHit = true;
+                for (let i = 0; i <= shipLength + 1; i++) {
+                    if (y - 1 >= 0) {
+                        board[shipUp + i][y - 1].isHit = true;
+                    }
+                    if (y + 1 < boardSize) {
+                        board[shipUp + i][y + 1].isHit = true;
+                    }
+                }
+            }
+            if (shipUp < 0) {
+                board[shipDown][y].isHit = true;
+                for (let i = 0; i < shipLength + 1; i++) {
+                    if (y - 1 >= 0) {
+                        board[i][y - 1].isHit = true;
+                    }
+                    if (y + 1 < boardSize) {
+                        board[i][y + 1].isHit = true;
+                    }
+                }
+            }
+            if (shipDown >= boardSize) {
+                board[shipUp][y].isHit = true;
+                for (let i = 0; i < shipLength + 1; i++) {
+                    if (y - 1 >= 0) {
+                        board[shipUp + i][y - 1].isHit = true;
+                    }
+                    if (y + 1 < boardSize) {
+                        board[shipUp + i][y + 1].isHit = true;
+                    }
+                }
+            }
+        }
+
+        if (board[x][y].direction === 'horizontal') {
+            const shipLeft = y - index - 1;
+            const shipRight = y + shipLength - index;
+            if (shipLeft >= 0 && shipRight < boardSize) {
+                board[x][shipLeft].isHit = true;
+                board[x][shipRight].isHit = true;
+                for (let i = 0; i <= shipLength + 1; i++) {
+                    if (x - 1 >= 0) {
+                        board[x - 1][shipLeft + i].isHit = true;
+                    }
+                    if (x + 1 < boardSize) {
+                        board[x + 1][shipLeft + i].isHit = true;
+                    }
+                }
+            }
+            if (shipLeft < 0) {
+                board[x][shipRight].isHit = true;
+                for (let i = 0; i < shipLength + 1; i++) {
+                    if (x - 1 >= 0) {
+                        board[x - 1][i].isHit = true;
+                    }
+                    if (x + 1 < boardSize) {
+                        board[x + 1][i].isHit = true;
+                    }
+                }
+            }
+            if (shipRight >= boardSize) {
+                board[x][shipLeft].isHit = true;
+                for (let i = 0; i < shipLength + 1; i++) {
+                    if (x - 1 >= 0) {
+                        board[x - 1][shipLeft + i].isHit = true;
+                    }
+                    if (x + 1 < boardSize) {
+                        board[x + 1][shipLeft + i].isHit = true;
+                    }
+                }
+            }
+        }
     };
 
     const isAllShipsSunk = () => {
@@ -482,9 +569,9 @@ const Gameboard = () => {
             const { x, y } = randomCoordinate();
             if (canPlaceShip(x, y, direction, newShip)) {
                 if (direction === 'vertical') {
-                    placeShipVertical(x, y, newShip);
+                    placeShipVertical(x, y, newShip, direction);
                 } else if (direction === 'horizontal') {
-                    placeShipHorizontal(x, y, newShip);
+                    placeShipHorizontal(x, y, newShip, direction);
                 }
                 placeShip = true;
             }
@@ -500,6 +587,7 @@ const Gameboard = () => {
         placeShipVertical,
         placeShipHorizontal,
         receiveAttack,
+        shipSunk,
         isAllShipsSunk,
         randomPlaceShip
     };

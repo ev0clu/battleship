@@ -46,6 +46,20 @@ const game = (() => {
         }
     };
 
+    const isShipSunk = (board, x, y) => {
+        if (board === 'player') {
+            if (playerGameboard.board[x][y].ship.isSunk()) {
+                playerGameboard.shipSunk(x, y);
+                ui.markShipAround(board, playerGameboard.board);
+            }
+        } else if (board === 'computer') {
+            if (computerGameboard.board[x][y].ship.isSunk()) {
+                computerGameboard.shipSunk(x, y);
+                ui.markShipAround(board, computerGameboard.board);
+            }
+        }
+    };
+
     const isShipHit = (board, x, y) => {
         if (board === 'player') {
             return playerGameboard.receiveAttack(x, y);
@@ -101,7 +115,8 @@ const game = (() => {
         isShipHit,
         isGameOver,
         computerRandomAttack,
-        randomShipPlacing
+        randomShipPlacing,
+        isShipSunk
     };
 })();
 
