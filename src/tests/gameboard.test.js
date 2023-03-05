@@ -693,7 +693,7 @@ describe('Legal ship placing in vertical and horizontal direction', () => {
         gameboard = Gameboard();
     });
 
-    test('Vertical Ship with length 2 shall not be put at location which is next to the other ship', () => {
+    test('Ships shall take 17 cells', () => {
         const x = 8;
         const y = 9;
         const ship1 = Ship(2);
@@ -707,12 +707,7 @@ describe('Legal ship placing in vertical and horizontal direction', () => {
         gameboard.randomPlaceShip(ship3);
         gameboard.randomPlaceShip(ship4);
         gameboard.randomPlaceShip(ship5);
-        //  ________
-        // |        |
-        // |        |
-        // |       X|
-        // |      OX|
-        //  ¨¨¨¨¨¨¨¨
+
         let counter = 0;
         gameboard.board.forEach((row) => {
             row.forEach((column) => {
@@ -723,5 +718,44 @@ describe('Legal ship placing in vertical and horizontal direction', () => {
         });
 
         expect(counter).toEqual(17);
+    });
+
+    test('Board shall be at default state after board reset', () => {
+        const x = 8;
+        const y = 9;
+        const ship1 = Ship(2);
+        const ship2 = Ship(3);
+        const ship3 = Ship(3);
+        const ship4 = Ship(4);
+        const ship5 = Ship(5);
+
+        gameboard.randomPlaceShip(ship1);
+        gameboard.randomPlaceShip(ship2);
+        gameboard.randomPlaceShip(ship3);
+        gameboard.randomPlaceShip(ship4);
+        gameboard.randomPlaceShip(ship5);
+
+        let counter = 0;
+        gameboard.board.forEach((row) => {
+            row.forEach((column) => {
+                if (column.isShip) {
+                    counter += 1;
+                }
+            });
+        });
+
+        expect(counter).toEqual(17);
+        counter = 0;
+
+        gameboard.resetBoard();
+
+        gameboard.board.forEach((row) => {
+            row.forEach((column) => {
+                if (column.isShip || column.shipIndex > 0 || column.isHit) {
+                    counter += 1;
+                }
+            });
+        });
+        expect(counter).toEqual(0);
     });
 });
