@@ -92,13 +92,14 @@ const game = (() => {
     };
 
     const randomShipPlacing = () => {
-        const ships = createShips();
+        const playerShips = createShips();
+        const computerShips = createShips();
 
-        ships.forEach((ship) => {
+        playerShips.forEach((ship) => {
             playerGameboard.randomPlaceShip(ship);
         });
 
-        ships.forEach((ship) => {
+        computerShips.forEach((ship) => {
             computerGameboard.randomPlaceShip(ship);
         });
 
