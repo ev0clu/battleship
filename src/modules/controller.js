@@ -28,6 +28,8 @@ const controller = (() => {
                 if (game.isCoordinateFree('player', coordinates.x, coordinates.y)) {
                     if (game.isShipHit('player', coordinates.x, coordinates.y)) {
                         cell.classList.add('hit');
+                        game.isShipSunk('player', coordinates.x, coordinates.y);
+
                         if (game.isGameOver()) {
                             ui.setGameoverUI('computer');
                         }
