@@ -186,21 +186,21 @@ const Gameboard = () => {
         return result;
     };
 
-    const placeShipVertical = (x, y, newShip, orientation) => {
+    const placeShipVertical = (x, y, newShip) => {
         for (let i = 0; i < newShip.length; i++) {
             board[x + i][y].isShip = true;
             board[x + i][y].ship = newShip;
             board[x + i][y].shipIndex = i;
-            board[x + i][y].direction = orientation;
+            board[x + i][y].direction = 'vertical';
         }
     };
 
-    const placeShipHorizontal = (x, y, newShip, orientation) => {
+    const placeShipHorizontal = (x, y, newShip) => {
         for (let i = 0; i < newShip.length; i++) {
             board[x][y + i].isShip = true;
             board[x][y + i].ship = newShip;
             board[x][y + i].shipIndex = i;
-            board[x][y + i].direction = orientation;
+            board[x][y + i].direction = 'horizontal';
         }
     };
 
@@ -333,9 +333,9 @@ const Gameboard = () => {
             const { x, y } = randomCoordinate();
             if (canPlaceShip(x, y, direction, newShip)) {
                 if (direction === 'vertical') {
-                    placeShipVertical(x, y, newShip, direction);
+                    placeShipVertical(x, y, newShip);
                 } else if (direction === 'horizontal') {
-                    placeShipHorizontal(x, y, newShip, direction);
+                    placeShipHorizontal(x, y, newShip);
                 }
                 placeShip = true;
             }

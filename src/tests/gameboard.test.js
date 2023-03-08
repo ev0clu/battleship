@@ -668,8 +668,7 @@ describe('Legal ship placing in vertical direction', () => {
     test('Vertical Ship with length 2 shall not be put at location which is next to the other ship', () => {
         const x = 3;
         const y = 7;
-        const ship1 = Ship(3);
-        const ship2 = Ship(3);
+        const ship = Ship(3);
         const direction = 'vertical';
         //  ________
         // |        |
@@ -682,7 +681,7 @@ describe('Legal ship placing in vertical direction', () => {
         gameboard.board[x + 1][y].isShip = true;
         gameboard.board[x + 2][y].isShip = true;
 
-        expect(gameboard.canPlaceShip(x + 3, y, direction, ship2)).toBeFalsy();
+        expect(gameboard.canPlaceShip(x + 3, y, direction, ship)).toBeFalsy();
     });
 });
 
@@ -694,8 +693,6 @@ describe('Legal ship placing in vertical and horizontal direction', () => {
     });
 
     test('Ships shall take 17 cells', () => {
-        const x = 8;
-        const y = 9;
         const ship1 = Ship(2);
         const ship2 = Ship(3);
         const ship3 = Ship(3);
@@ -721,8 +718,6 @@ describe('Legal ship placing in vertical and horizontal direction', () => {
     });
 
     test('Board shall be at default state after board reset', () => {
-        const x = 8;
-        const y = 9;
         const ship1 = Ship(2);
         const ship2 = Ship(3);
         const ship3 = Ship(3);
@@ -757,5 +752,501 @@ describe('Legal ship placing in vertical and horizontal direction', () => {
             });
         });
         expect(counter).toEqual(0);
+    });
+});
+
+describe('Mark the area around the ship if the horizontal ship is sunk', () => {
+    let gameboard = {};
+
+    beforeEach(() => {
+        gameboard = Gameboard();
+    });
+
+    test('Test 1', () => {
+        const x = 0;
+        const y = 0;
+        const ship = Ship(2);
+        //  ________
+        // |XXO     |
+        // |OOO     |
+        // |        |
+        //  ¨¨¨¨¨¨¨¨
+
+        gameboard.placeShipHorizontal(x, y, ship);
+        const shipLength = gameboard.board[x][y].ship.length;
+        gameboard.board[x][y].isHit = true;
+        gameboard.board[x][y + 1].isHit = true;
+
+        gameboard.shipSunk(x, y);
+
+        expect(gameboard.board[x][y + shipLength].isHit).toBeTruthy();
+        expect(gameboard.board[x][y + shipLength].isShip).toBeFalsy();
+        for (let i = 0; i < shipLength + 1; i++) {
+            expect(gameboard.board[x + 1][y + i].isHit).toBeTruthy();
+            expect(gameboard.board[x + 1][y + i].isShip).toBeFalsy();
+        }
+    });
+
+    test('Test 2', () => {
+        const x = 0;
+        const y = 2;
+        const ship = Ship(2);
+        //  ________
+        // | OXXO   |
+        // | OOOO   |
+        // |        |
+        //  ¨¨¨¨¨¨¨¨
+
+        gameboard.placeShipHorizontal(x, y, ship);
+        const shipLength = gameboard.board[x][y].ship.length;
+        gameboard.board[x][y].isHit = true;
+        gameboard.board[x][y + 1].isHit = true;
+
+        gameboard.shipSunk(x, y);
+
+        expect(gameboard.board[x][y - 1].isHit).toBeTruthy();
+        expect(gameboard.board[x][y - 1].isShip).toBeFalsy();
+        expect(gameboard.board[x][y + shipLength].isHit).toBeTruthy();
+        expect(gameboard.board[x][y + shipLength].isShip).toBeFalsy();
+        for (let i = -1; i < shipLength + 1; i++) {
+            expect(gameboard.board[x + 1][y + i].isHit).toBeTruthy();
+            expect(gameboard.board[x + 1][y + i].isShip).toBeFalsy();
+        }
+    });
+
+    test('Test 3', () => {
+        const x = 0;
+        const y = 8;
+        const ship = Ship(2);
+        //  ________
+        // |     OXX|
+        // |     OOO|
+        // |        |
+        //  ¨¨¨¨¨¨¨¨
+
+        gameboard.placeShipHorizontal(x, y, ship);
+        const shipLength = gameboard.board[x][y].ship.length;
+        gameboard.board[x][y].isHit = true;
+        gameboard.board[x][y + 1].isHit = true;
+
+        gameboard.shipSunk(x, y);
+
+        expect(gameboard.board[x][y - 1].isHit).toBeTruthy();
+        expect(gameboard.board[x][y - 1].isShip).toBeFalsy();
+        for (let i = -1; i < shipLength; i++) {
+            expect(gameboard.board[x + 1][y + i].isHit).toBeTruthy();
+            expect(gameboard.board[x + 1][y + i].isShip).toBeFalsy();
+        }
+    });
+
+    test('Test 4', () => {
+        const x = 6;
+        const y = 0;
+        const ship = Ship(2);
+        //  ________
+        // |OOO     |
+        // |XXO     |
+        // |OOO     |
+        //  ¨¨¨¨¨¨¨¨
+
+        gameboard.placeShipHorizontal(x, y, ship);
+        const shipLength = gameboard.board[x][y].ship.length;
+        gameboard.board[x][y].isHit = true;
+        gameboard.board[x][y + 1].isHit = true;
+
+        gameboard.shipSunk(x, y);
+
+        expect(gameboard.board[x][y + shipLength].isHit).toBeTruthy();
+        expect(gameboard.board[x][y + shipLength].isShip).toBeFalsy();
+        for (let i = 0; i < shipLength + 1; i++) {
+            expect(gameboard.board[x - 1][y + i].isHit).toBeTruthy();
+            expect(gameboard.board[x - 1][y + i].isShip).toBeFalsy();
+            expect(gameboard.board[x + 1][y + i].isHit).toBeTruthy();
+            expect(gameboard.board[x + 1][y + i].isShip).toBeFalsy();
+        }
+    });
+
+    test('Test 5', () => {
+        const x = 4;
+        const y = 6;
+        const ship = Ship(2);
+        //  ________
+        // |  OOOO  |
+        // |  OXXO  |
+        // |  OOOO  |
+        //  ¨¨¨¨¨¨¨¨
+
+        gameboard.placeShipHorizontal(x, y, ship);
+        const shipLength = gameboard.board[x][y].ship.length;
+        gameboard.board[x][y].isHit = true;
+        gameboard.board[x][y + 1].isHit = true;
+
+        gameboard.shipSunk(x, y);
+
+        expect(gameboard.board[x][y - 1].isHit).toBeTruthy();
+        expect(gameboard.board[x][y - 1].isShip).toBeFalsy();
+        expect(gameboard.board[x][y + shipLength].isHit).toBeTruthy();
+        expect(gameboard.board[x][y + shipLength].isShip).toBeFalsy();
+        for (let i = -1; i < shipLength + 1; i++) {
+            expect(gameboard.board[x - 1][y + i].isHit).toBeTruthy();
+            expect(gameboard.board[x - 1][y + i].isShip).toBeFalsy();
+            expect(gameboard.board[x + 1][y + i].isHit).toBeTruthy();
+            expect(gameboard.board[x + 1][y + i].isShip).toBeFalsy();
+        }
+    });
+
+    test('Test 6', () => {
+        const x = 2;
+        const y = 8;
+        const ship = Ship(2);
+        //  ________
+        // |     OOO|
+        // |     OXX|
+        // |     OOO|
+        //  ¨¨¨¨¨¨¨¨
+
+        gameboard.placeShipHorizontal(x, y, ship);
+        const shipLength = gameboard.board[x][y].ship.length;
+        gameboard.board[x][y].isHit = true;
+        gameboard.board[x][y + 1].isHit = true;
+
+        gameboard.shipSunk(x, y);
+
+        expect(gameboard.board[x][y - 1].isHit).toBeTruthy();
+        expect(gameboard.board[x][y - 1].isShip).toBeFalsy();
+        for (let i = -1; i < shipLength; i++) {
+            expect(gameboard.board[x - 1][y + i].isHit).toBeTruthy();
+            expect(gameboard.board[x - 1][y + i].isShip).toBeFalsy();
+            expect(gameboard.board[x + 1][y + i].isHit).toBeTruthy();
+            expect(gameboard.board[x + 1][y + i].isShip).toBeFalsy();
+        }
+    });
+
+    test('Test 7', () => {
+        const x = 9;
+        const y = 0;
+        const ship = Ship(2);
+        //  ________
+        // |        |
+        // |OOO     |
+        // |XXO     |
+        //  ¨¨¨¨¨¨¨¨
+
+        gameboard.placeShipHorizontal(x, y, ship);
+        const shipLength = gameboard.board[x][y].ship.length;
+        gameboard.board[x][y].isHit = true;
+        gameboard.board[x][y + 1].isHit = true;
+
+        gameboard.shipSunk(x, y);
+
+        expect(gameboard.board[x][y + shipLength].isHit).toBeTruthy();
+        expect(gameboard.board[x][y + shipLength].isShip).toBeFalsy();
+        for (let i = 0; i < shipLength + 1; i++) {
+            expect(gameboard.board[x - 1][y + i].isHit).toBeTruthy();
+            expect(gameboard.board[x - 1][y + i].isShip).toBeFalsy();
+        }
+    });
+
+    test('Test 8', () => {
+        const x = 9;
+        const y = 4;
+        const ship = Ship(2);
+        //  ________
+        // |        |
+        // |  OOOO  |
+        // |  OXXO  |
+        //  ¨¨¨¨¨¨¨¨
+
+        gameboard.placeShipHorizontal(x, y, ship);
+        const shipLength = gameboard.board[x][y].ship.length;
+        gameboard.board[x][y].isHit = true;
+        gameboard.board[x][y + 1].isHit = true;
+
+        gameboard.shipSunk(x, y);
+
+        expect(gameboard.board[x][y - 1].isHit).toBeTruthy();
+        expect(gameboard.board[x][y - 1].isShip).toBeFalsy();
+        expect(gameboard.board[x][y + shipLength].isHit).toBeTruthy();
+        expect(gameboard.board[x][y + shipLength].isShip).toBeFalsy();
+        for (let i = -1; i < shipLength + 1; i++) {
+            expect(gameboard.board[x - 1][y + i].isHit).toBeTruthy();
+            expect(gameboard.board[x - 1][y + i].isShip).toBeFalsy();
+        }
+    });
+
+    test('Test 9', () => {
+        const x = 9;
+        const y = 8;
+        const ship = Ship(2);
+        //  ________
+        // |        |
+        // |     OOO|
+        // |     OXX|
+        //  ¨¨¨¨¨¨¨¨
+
+        gameboard.placeShipHorizontal(x, y, ship);
+        const shipLength = gameboard.board[x][y].ship.length;
+        gameboard.board[x][y].isHit = true;
+        gameboard.board[x][y + 1].isHit = true;
+
+        gameboard.shipSunk(x, y);
+
+        expect(gameboard.board[x][y - 1].isHit).toBeTruthy();
+        expect(gameboard.board[x][y - 1].isShip).toBeFalsy();
+        for (let i = -1; i < shipLength; i++) {
+            expect(gameboard.board[x - 1][y + i].isHit).toBeTruthy();
+            expect(gameboard.board[x - 1][y + i].isShip).toBeFalsy();
+        }
+    });
+});
+
+describe('Mark the area around the ship if the vertical ship is sunk', () => {
+    let gameboard = {};
+
+    beforeEach(() => {
+        gameboard = Gameboard();
+    });
+
+    test('Test 1', () => {
+        const x = 0;
+        const y = 0;
+        const ship = Ship(2);
+        //  ________
+        // |XO      |
+        // |XO      |
+        // |OO      |
+        //  ¨¨¨¨¨¨¨¨
+
+        gameboard.placeShipVertical(x, y, ship);
+        const shipLength = gameboard.board[x][y].ship.length;
+        gameboard.board[x][y].isHit = true;
+        gameboard.board[x + 1][y].isHit = true;
+
+        gameboard.shipSunk(x, y);
+
+        expect(gameboard.board[x + shipLength][y].isHit).toBeTruthy();
+        expect(gameboard.board[x + shipLength][y].isShip).toBeFalsy();
+        for (let i = 0; i < shipLength + 1; i++) {
+            expect(gameboard.board[x + i][y + 1].isHit).toBeTruthy();
+            expect(gameboard.board[x + i][y + 1].isShip).toBeFalsy();
+        }
+    });
+
+    test('Test 2', () => {
+        const x = 0;
+        const y = 2;
+        const ship = Ship(2);
+        //  ________
+        // | OXO    |
+        // | OXO    |
+        // | OOO    |
+        //  ¨¨¨¨¨¨¨¨
+
+        gameboard.placeShipVertical(x, y, ship);
+        const shipLength = gameboard.board[x][y].ship.length;
+        gameboard.board[x][y].isHit = true;
+        gameboard.board[x + 1][y].isHit = true;
+
+        gameboard.shipSunk(x, y);
+
+        expect(gameboard.board[x + shipLength][y].isHit).toBeTruthy();
+        expect(gameboard.board[x + shipLength][y].isShip).toBeFalsy();
+        for (let i = 0; i < shipLength + 1; i++) {
+            expect(gameboard.board[x + i][y - 1].isHit).toBeTruthy();
+            expect(gameboard.board[x + i][y - 1].isShip).toBeFalsy();
+            expect(gameboard.board[x + i][y + 1].isHit).toBeTruthy();
+            expect(gameboard.board[x + i][y + 1].isShip).toBeFalsy();
+        }
+    });
+
+    test('Test 3', () => {
+        const x = 0;
+        const y = 9;
+        const ship = Ship(2);
+        //  ________
+        // |      OX|
+        // |      OX|
+        // |      OO|
+        //  ¨¨¨¨¨¨¨¨
+
+        gameboard.placeShipVertical(x, y, ship);
+        const shipLength = gameboard.board[x][y].ship.length;
+        gameboard.board[x][y].isHit = true;
+        gameboard.board[x + 1][y].isHit = true;
+
+        gameboard.shipSunk(x, y);
+
+        expect(gameboard.board[x + shipLength][y].isHit).toBeTruthy();
+        expect(gameboard.board[x + shipLength][y].isShip).toBeFalsy();
+        for (let i = 0; i < shipLength + 1; i++) {
+            expect(gameboard.board[x + i][y - 1].isHit).toBeTruthy();
+            expect(gameboard.board[x + i][y - 1].isShip).toBeFalsy();
+        }
+    });
+
+    test('Test 4', () => {
+        const x = 6;
+        const y = 0;
+        const ship = Ship(2);
+        //  ________
+        // |OO      |
+        // |XO      |
+        // |XO      |
+        // |OO      |
+        //  ¨¨¨¨¨¨¨¨
+
+        gameboard.placeShipVertical(x, y, ship);
+        const shipLength = gameboard.board[x][y].ship.length;
+        gameboard.board[x][y].isHit = true;
+        gameboard.board[x + 1][y].isHit = true;
+
+        gameboard.shipSunk(x, y);
+
+        expect(gameboard.board[x - 1][y].isHit).toBeTruthy();
+        expect(gameboard.board[x - 1][y].isShip).toBeFalsy();
+        expect(gameboard.board[x + shipLength][y].isHit).toBeTruthy();
+        expect(gameboard.board[x + shipLength][y].isShip).toBeFalsy();
+        for (let i = -1; i < shipLength + 1; i++) {
+            expect(gameboard.board[x + i][y + 1].isHit).toBeTruthy();
+            expect(gameboard.board[x + i][y + 1].isShip).toBeFalsy();
+        }
+    });
+
+    test('Test 5', () => {
+        const x = 4;
+        const y = 6;
+        const ship = Ship(2);
+        //  ________
+        // |  OOO   |
+        // |  OXO   |
+        // |  OXO   |
+        // |  OOO   |
+        //  ¨¨¨¨¨¨¨¨
+
+        gameboard.placeShipVertical(x, y, ship);
+        const shipLength = gameboard.board[x][y].ship.length;
+        gameboard.board[x][y].isHit = true;
+        gameboard.board[x + 1][y].isHit = true;
+
+        gameboard.shipSunk(x, y);
+
+        expect(gameboard.board[x - 1][y].isHit).toBeTruthy();
+        expect(gameboard.board[x - 1][y].isShip).toBeFalsy();
+        expect(gameboard.board[x + shipLength][y].isHit).toBeTruthy();
+        expect(gameboard.board[x + shipLength][y].isShip).toBeFalsy();
+        for (let i = -1; i < shipLength + 1; i++) {
+            expect(gameboard.board[x + i][y - 1].isHit).toBeTruthy();
+            expect(gameboard.board[x + i][y - 1].isShip).toBeFalsy();
+            expect(gameboard.board[x + i][y + 1].isHit).toBeTruthy();
+            expect(gameboard.board[x + i][y + 1].isShip).toBeFalsy();
+        }
+    });
+
+    test('Test 6', () => {
+        const x = 2;
+        const y = 9;
+        const ship = Ship(2);
+        //  ________
+        // |      OO|
+        // |      OX|
+        // |      OX|
+        // |      OO|
+        //  ¨¨¨¨¨¨¨¨
+
+        gameboard.placeShipVertical(x, y, ship);
+        const shipLength = gameboard.board[x][y].ship.length;
+        gameboard.board[x][y].isHit = true;
+        gameboard.board[x + 1][y].isHit = true;
+
+        gameboard.shipSunk(x, y);
+
+        expect(gameboard.board[x - 1][y].isHit).toBeTruthy();
+        expect(gameboard.board[x - 1][y].isShip).toBeFalsy();
+        expect(gameboard.board[x + shipLength][y].isHit).toBeTruthy();
+        expect(gameboard.board[x + shipLength][y].isShip).toBeFalsy();
+        for (let i = -1; i < shipLength + 1; i++) {
+            expect(gameboard.board[x + i][y - 1].isHit).toBeTruthy();
+            expect(gameboard.board[x + i][y - 1].isShip).toBeFalsy();
+        }
+    });
+
+    test('Test 7', () => {
+        const x = 8;
+        const y = 0;
+        const ship = Ship(2);
+        //  ________
+        // |        |
+        // |OO      |
+        // |XO      |
+        // |XO      |
+        //  ¨¨¨¨¨¨¨¨
+
+        gameboard.placeShipVertical(x, y, ship);
+        const shipLength = gameboard.board[x][y].ship.length;
+        gameboard.board[x][y].isHit = true;
+        gameboard.board[x + 1][y].isHit = true;
+
+        gameboard.shipSunk(x, y);
+
+        expect(gameboard.board[x - 1][y].isHit).toBeTruthy();
+        expect(gameboard.board[x - 1][y].isShip).toBeFalsy();
+        for (let i = -1; i < shipLength; i++) {
+            expect(gameboard.board[x + i][y + 1].isHit).toBeTruthy();
+            expect(gameboard.board[x + i][y + 1].isShip).toBeFalsy();
+        }
+    });
+
+    test('Test 8', () => {
+        const x = 8;
+        const y = 4;
+        const ship = Ship(2);
+        //  ________
+        // |        |
+        // |  OOO   |
+        // |  OXO   |
+        // |  OXO   |
+        //  ¨¨¨¨¨¨¨¨
+
+        gameboard.placeShipVertical(x, y, ship);
+        const shipLength = gameboard.board[x][y].ship.length;
+        gameboard.board[x][y].isHit = true;
+        gameboard.board[x + 1][y].isHit = true;
+
+        gameboard.shipSunk(x, y);
+
+        expect(gameboard.board[x - 1][y].isHit).toBeTruthy();
+        expect(gameboard.board[x - 1][y].isShip).toBeFalsy();
+        for (let i = -1; i < shipLength; i++) {
+            expect(gameboard.board[x + i][y - 1].isHit).toBeTruthy();
+            expect(gameboard.board[x + i][y - 1].isShip).toBeFalsy();
+            expect(gameboard.board[x + i][y + 1].isHit).toBeTruthy();
+            expect(gameboard.board[x + i][y + 1].isShip).toBeFalsy();
+        }
+    });
+
+    test('Test 9', () => {
+        const x = 8;
+        const y = 9;
+        const ship = Ship(2);
+        //  ________
+        // |        |
+        // |      OO|
+        // |      OX|
+        // |      OX|
+        //  ¨¨¨¨¨¨¨¨
+
+        gameboard.placeShipVertical(x, y, ship);
+        const shipLength = gameboard.board[x][y].ship.length;
+        gameboard.board[x][y].isHit = true;
+        gameboard.board[x + 1][y].isHit = true;
+
+        gameboard.shipSunk(x, y);
+
+        expect(gameboard.board[x - 1][y].isHit).toBeTruthy();
+        expect(gameboard.board[x - 1][y].isShip).toBeFalsy();
+        for (let i = -1; i < shipLength; i++) {
+            expect(gameboard.board[x + i][y - 1].isHit).toBeTruthy();
+            expect(gameboard.board[x + i][y - 1].isShip).toBeFalsy();
+        }
     });
 });
