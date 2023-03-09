@@ -95,7 +95,7 @@ const Gameboard = () => {
                                 }
                             }
                             if (y + 1 < boardSize) {
-                                if (board[shipUp][y + 1].isShip) {
+                                if (board[shipUp + i][y + 1].isShip) {
                                     result = false;
                                     break;
                                 }
