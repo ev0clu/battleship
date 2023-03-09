@@ -1,4 +1,3 @@
-import ui from './ui';
 import Ship from './ship';
 import Gameboard from './gameboard';
 import Player from './player';
@@ -14,7 +13,16 @@ const game = (() => {
         computer.isMyTurn = false;
     };
 
-    const restartGame = () => {
+    const getGameBoard = (board) => {
+        if (board === 'player') {
+            return playerGameboard.board;
+        }
+        if (board === 'computer') {
+            return computerGameboard.board;
+        }
+    };
+
+    const resetGameboards = () => {
         playerGameboard.resetBoard();
         computerGameboard.resetBoard();
     };
@@ -50,12 +58,12 @@ const game = (() => {
         if (board === 'player') {
             if (playerGameboard.board[x][y].ship.isSunk()) {
                 playerGameboard.shipSunk(x, y);
-                ui.markShipAround(board, playerGameboard.board);
+                return true;
             }
         } else if (board === 'computer') {
             if (computerGameboard.board[x][y].ship.isSunk()) {
                 computerGameboard.shipSunk(x, y);
-                ui.markShipAround(board, computerGameboard.board);
+                return true;
             }
         }
     };
@@ -91,32 +99,34 @@ const game = (() => {
         return ships;
     };
 
-    const randomShipPlacing = () => {
-        const playerShips = createShips();
-        const computerShips = createShips();
+    const generateShipRandomCoordinates = (board) => {
+        if (board === 'player') {
+            const playerShips = createShips();
 
-        playerShips.forEach((ship) => {
-            playerGameboard.randomPlaceShip(ship);
-        });
+            playerShips.forEach((ship) => {
+                playerGameboard.randomPlaceShip(ship);
+            });
+        }
+        if (board === 'computer') {
+            const computerShips = createShips();
 
-        computerShips.forEach((ship) => {
-            computerGameboard.randomPlaceShip(ship);
-        });
-
-        ui.addShipToBoard('player', playerGameboard.board);
-        ui.addShipToBoard('computer', computerGameboard.board);
+            computerShips.forEach((ship) => {
+                computerGameboard.randomPlaceShip(ship);
+            });
+        }
     };
 
     return {
         initGame,
-        restartGame,
+        getGameBoard,
+        resetGameboards,
         isPlayerTurn,
         changeTurn,
         isCoordinateFree,
         isShipHit,
         isGameOver,
         computerRandomAttack,
-        randomShipPlacing,
+        generateShipRandomCoordinates,
         isShipSunk
     };
 })();

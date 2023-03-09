@@ -47,7 +47,9 @@ main {
     align-items: center;
 }
 
-#content {
+.content-init,
+.content-game,
+#button-container {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -55,8 +57,27 @@ main {
     gap: 1rem;
 }
 
+.content-init {
+    gap: 4rem;
+}
+
+#ship-container,
+#ship-choosing-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+#ship-choosing-container {
+    height: 15rem;
+    width: 10rem;
+}
+
 .cell-player-board,
-.cell-computer-board {
+.cell-computer-board,
+.cell-init-board {
     font-family: 'Nunito', sans-serif, 'Segoe UI', 'Roboto', Helvetica, Arial, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', system-ui;
     display: flex;
@@ -75,7 +96,8 @@ main {
 }
 
 #player-board,
-#computer-board {
+#computer-board,
+#init-board {
     display: grid;
     grid-template-columns: repeat(10, 2.5rem);
     grid-template-rows: repeat(10, 2.5rem);
@@ -103,6 +125,10 @@ main {
     font-size: 1.5rem;
 }
 
+.inactive {
+    display: none;
+}
+
 .btn-restart-inactive {
     visibility: hidden;
 }
@@ -111,26 +137,38 @@ main {
     pointer-events: none;
 }
 
-#btn-restart {
+#btn-restart,
+#btn-reset,
+#btn-random,
+#btn-start,
+#btn-rotate {
     border: none;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 600;
     color: white;
-    width: 10rem;
+    width: 7rem;
     height: 2.5rem;
     background-color: var(--button-restart-color);
     border-radius: 8px;
 }
 
-#btn-restart:hover {
+#btn-restart:hover,
+#btn-reset:hover,
+#btn-random:hover,
+#btn-start:hover,
+#btn-rotate:hover {
     cursor: pointer;
     background-color: var(--button-restart-color-hover);
 }
 
-#btn-restart:active {
+#btn-restart:active,
+#btn-reset:active,
+#btn-random:active,
+#btn-start:active,
+#btn-rotate:active {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 

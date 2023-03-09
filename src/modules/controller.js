@@ -2,20 +2,6 @@ import ui from './ui';
 import game from './game';
 
 const controller = (() => {
-    const restartEvent = () => {
-        const restartButton = document.getElementById('btn-restart');
-        restartButton.addEventListener('click', () => {
-            ui.setNewGameUI();
-            game.restartGame();
-            game.randomShipPlacing();
-        });
-    };
-
-    const initPage = () => {
-        ui.renderPage();
-        restartEvent();
-    };
-
     const computerEvent = () => {
         const playerCell = document.querySelectorAll('.cell-player-board');
         const coordinates = game.computerRandomAttack();
@@ -28,7 +14,9 @@ const controller = (() => {
                 if (game.isCoordinateFree('player', coordinates.x, coordinates.y)) {
                     if (game.isShipHit('player', coordinates.x, coordinates.y)) {
                         cell.classList.add('hit');
-                        game.isShipSunk('player', coordinates.x, coordinates.y);
+                        if (game.isShipSunk('player', coordinates.x, coordinates.y)) {
+                            ui.markShipAround('player', game.getGameBoard('player'));
+                        }
 
                         if (game.isGameOver()) {
                             ui.setGameoverUI('computer');
@@ -55,7 +43,9 @@ const controller = (() => {
                     if (game.isCoordinateFree('computer', x, y)) {
                         if (game.isShipHit('computer', x, y)) {
                             event.target.classList.add('hit');
-                            game.isShipSunk('computer', x, y);
+                            if (game.isShipSunk('computer', x, y)) {
+                                ui.markShipAround('computer', game.getGameBoard('computer'));
+                            }
 
                             if (game.isGameOver()) {
                                 ui.setGameoverUI('player');
@@ -77,7 +67,55 @@ const controller = (() => {
         });
     };
 
-    return { initPage, playerEvent };
+    const resetButtonEventListener = () => {
+        const resetButton = document.getElementById('btn-reset');
+        resetButton.addEventListener('click', () => {
+            ui.clearBoard('init');
+            game.resetGameboards();
+        });
+    };
+
+    const randomButtonEventListener = () => {
+        const randomButton = document.getElementById('btn-random');
+        randomButton.addEventListener('click', () => {
+            ui.clearBoard('init');
+            game.resetGameboards();
+            game.generateShipRandomCoordinates('player');
+            ui.addShipToGameBoard('init', game.getGameBoard('player'));
+        });
+    };
+
+    const startButtonEventListener = () => {
+        const startButton = document.getElementById('btn-start');
+        startButton.addEventListener('click', () => {
+            ui.toggleUI();
+            game.generateShipRandomCoordinates('computer');
+            ui.addShipToGameBoard('player', game.getGameBoard('player'));
+            ui.addShipToGameBoard('computer', game.getGameBoard('computer'));
+            ui.clearBoard('init');
+        });
+    };
+
+    const restartButtonEventListener = () => {
+        const restartButton = document.getElementById('btn-restart');
+        restartButton.addEventListener('click', () => {
+            ui.toggleUI();
+            ui.setNewGameUI();
+            ui.clearBoard('game');
+            game.resetGameboards();
+        });
+    };
+
+    const renderInitPage = () => {
+        ui.createInitPage();
+        resetButtonEventListener();
+        randomButtonEventListener();
+        startButtonEventListener();
+        restartButtonEventListener();
+        playerEvent();
+    };
+
+    return { renderInitPage };
 })();
 
 export default controller;

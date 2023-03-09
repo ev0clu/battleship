@@ -82,18 +82,98 @@ const ui = (() => {
         return middleContainer;
     };
 
-    const createMain = () => {
-        const main = document.createElement('main');
-
+    const createGameUI = () => {
         const content = document.createElement('div');
-        content.id = 'content';
+        content.classList.add('content-game');
 
         content.append(
             createBoard('player-board', 10),
             createMiddleContainer(),
             createBoard('computer-board', 10)
         );
-        main.appendChild(content);
+
+        return content;
+    };
+
+    const createShipContainer = () => {
+        const shipContainer = document.createElement('div');
+        shipContainer.id = 'ship-container';
+
+        return shipContainer;
+    };
+
+    const createRotateButton = () => {
+        const rotateButton = document.createElement('button');
+        rotateButton.id = 'btn-rotate';
+        rotateButton.textContent = 'Rotate';
+
+        return rotateButton;
+    };
+
+    const createShipChoosingContainer = () => {
+        const shipChoosingContainer = document.createElement('div');
+        shipChoosingContainer.id = 'ship-choosing-container';
+
+        shipChoosingContainer.append(createShipContainer(), createRotateButton());
+
+        return shipChoosingContainer;
+    };
+
+    const createResetButton = () => {
+        const resetButton = document.createElement('button');
+        resetButton.id = 'btn-reset';
+        resetButton.textContent = 'Reset';
+
+        return resetButton;
+    };
+
+    const createRandomButton = () => {
+        const randomButton = document.createElement('button');
+        randomButton.id = 'btn-random';
+        randomButton.textContent = 'Random';
+
+        return randomButton;
+    };
+
+    const createStartButton = () => {
+        const startButton = document.createElement('button');
+        startButton.id = 'btn-start';
+        startButton.textContent = 'Start';
+
+        return startButton;
+    };
+
+    const createButtonContainer = () => {
+        const buttonContainer = document.createElement('div');
+        buttonContainer.id = 'button-container';
+
+        buttonContainer.append(createResetButton(), createRandomButton(), createStartButton());
+
+        return buttonContainer;
+    };
+
+    const createShipPlacingBoardContainer = () => {
+        const placingBoardContainer = document.createElement('div');
+        placingBoardContainer.id = 'ship-container';
+
+        placingBoardContainer.append(createBoard('init-board', 10), createButtonContainer());
+
+        return placingBoardContainer;
+    };
+
+    const createInitUI = () => {
+        const content = document.createElement('div');
+        content.classList.add('content-init');
+
+        content.append(createShipChoosingContainer(), createShipPlacingBoardContainer());
+
+        return content;
+    };
+
+    const createMain = () => {
+        const main = document.createElement('main');
+
+        main.append(createGameUI(), createInitUI());
 
         return main;
     };
@@ -129,21 +209,20 @@ const ui = (() => {
         return footer;
     };
 
-    const renderPage = () => {
-        const body = document.querySelector('body');
-        body.append(createHeader(), createMain(), createFooter());
-    };
-
-    const addShipToBoard = (boardSelector, board) => {
+    const addShipToGameBoard = (boardSelector, board) => {
         const cellPlayerBoard = document.querySelectorAll('.cell-player-board');
         const cellComputerBoard = document.querySelectorAll('.cell-computer-board');
+        const cellInitBoard = document.querySelectorAll('.cell-init-board');
         let cell = '';
 
         if (boardSelector === 'player') {
             cell = cellPlayerBoard;
         } else if (boardSelector === 'computer') {
             cell = cellComputerBoard;
+        } else if (boardSelector === 'init') {
+            cell = cellInitBoard;
         }
+
         board.forEach((row) => {
             row.forEach((column) => {
                 if (column.isShip) {
@@ -211,33 +290,50 @@ const ui = (() => {
         toggleCursorStatus();
     };
 
-    const clearBoard = () => {
-        const cellPlayerBoard = document.querySelectorAll('.cell-player-board');
-        const cellComputerBoard = document.querySelectorAll('.cell-computer-board');
+    const clearBoard = (board) => {
+        if (board === 'init') {
+            const cellInitBoard = document.querySelectorAll('.cell-init-board');
 
-        cellPlayerBoard.forEach((cell) => {
-            if (cell.classList.contains('ship')) {
-                cell.classList.remove('ship');
-            }
-            if (cell.classList.contains('hit')) {
-                cell.classList.remove('hit');
-            }
-            if (cell.classList.contains('miss')) {
-                cell.classList.remove('miss');
-            }
-        });
+            cellInitBoard.forEach((cell) => {
+                if (cell.classList.contains('ship')) {
+                    cell.classList.remove('ship');
+                }
+                if (cell.classList.contains('hit')) {
+                    cell.classList.remove('hit');
+                }
+                if (cell.classList.contains('miss')) {
+                    cell.classList.remove('miss');
+                }
+            });
+        }
+        if (board === 'game') {
+            const cellPlayerBoard = document.querySelectorAll('.cell-player-board');
+            const cellComputerBoard = document.querySelectorAll('.cell-computer-board');
 
-        cellComputerBoard.forEach((cell) => {
-            if (cell.classList.contains('ship')) {
-                cell.classList.remove('ship');
-            }
-            if (cell.classList.contains('hit')) {
-                cell.classList.remove('hit');
-            }
-            if (cell.classList.contains('miss')) {
-                cell.classList.remove('miss');
-            }
-        });
+            cellPlayerBoard.forEach((cell) => {
+                if (cell.classList.contains('ship')) {
+                    cell.classList.remove('ship');
+                }
+                if (cell.classList.contains('hit')) {
+                    cell.classList.remove('hit');
+                }
+                if (cell.classList.contains('miss')) {
+                    cell.classList.remove('miss');
+                }
+            });
+
+            cellComputerBoard.forEach((cell) => {
+                if (cell.classList.contains('ship')) {
+                    cell.classList.remove('ship');
+                }
+                if (cell.classList.contains('hit')) {
+                    cell.classList.remove('hit');
+                }
+                if (cell.classList.contains('miss')) {
+                    cell.classList.remove('miss');
+                }
+            });
+        }
     };
 
     const setNewGameUI = () => {
@@ -248,11 +344,29 @@ const ui = (() => {
         showWinnerInformaion('');
     };
 
+    const toggleUI = () => {
+        const gameUI = document.querySelector('.content-game');
+        const initUI = document.querySelector('.content-init');
+
+        gameUI.classList.toggle('inactive');
+        initUI.classList.toggle('inactive');
+    };
+
+    const createInitPage = () => {
+        const body = document.querySelector('body');
+        body.append(createHeader(), createMain(), createFooter());
+
+        const gameUI = document.querySelector('.content-game');
+        gameUI.classList.add('inactive');
+    };
+
     return {
-        renderPage,
-        addShipToBoard,
+        createInitPage,
+        toggleUI,
+        addShipToGameBoard,
         changeTurnInformation,
         setGameoverUI,
+        clearBoard,
         setNewGameUI,
         markShipAround
     };
