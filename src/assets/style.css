@@ -58,11 +58,12 @@ main {
 }
 
 .content-init {
+    align-items: flex-start;
     gap: 4rem;
 }
 
-#ship-container,
-#ship-choosing-container {
+#init-board-container,
+#init-ship-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -70,9 +71,40 @@ main {
     gap: 2rem;
 }
 
-#ship-choosing-container {
-    height: 15rem;
-    width: 10rem;
+.ship-drag-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 19.4rem;
+    height: 19.4rem;
+    padding: 0.5rem;
+    border: 2px solid black;
+    background-color: #e7e5e4;
+}
+
+.ship-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 0.5rem;
+    border: 0.5px solid black;
+}
+
+.drag-container-toggle {
+    flex-direction: row;
+}
+
+.ship-container-toggle {
+    flex-direction: column;
+}
+
+.cell-ship {
+    border: 1px solid black;
+    cursor: move;
+    height: 2.5rem;
+    width: 2.5rem;
 }
 
 .cell-player-board,
@@ -91,6 +123,7 @@ main {
     cursor: crosshair;
 }
 
+.cell-ship,
 .ship {
     background-color: var(--ship-color);
 }

@@ -95,9 +95,42 @@ const ui = (() => {
         return content;
     };
 
+    const toggleShipDirection = () => {
+        const shipDragContainer = document.querySelector('.ship-drag-container');
+        const shipContainer = document.querySelectorAll('.ship-container');
+
+        shipDragContainer.classList.toggle('drag-container-toggle');
+
+        shipContainer.forEach((element) => {
+            element.classList.toggle('ship-container-toggle');
+        });
+    };
+
+    const createShip = (length) => {
+        const ship = document.createElement('div');
+        ship.setAttribute('class', 'ship-container ');
+
+        for (let i = 0; i < length; i++) {
+            const shipCell = document.createElement('div');
+            shipCell.setAttribute('class', `cell-ship`);
+            shipCell.setAttribute('data-index', `${i}`);
+            ship.appendChild(shipCell);
+        }
+
+        return ship;
+    };
+
     const createShipContainer = () => {
         const shipContainer = document.createElement('div');
-        shipContainer.id = 'ship-container';
+        shipContainer.setAttribute('class', 'ship-drag-container');
+
+        shipContainer.append(
+            createShip(5),
+            createShip(4),
+            createShip(3),
+            createShip(3),
+            createShip(2)
+        );
 
         return shipContainer;
     };
@@ -110,9 +143,9 @@ const ui = (() => {
         return rotateButton;
     };
 
-    const createShipChoosingContainer = () => {
+    const createInitShipContainer = () => {
         const shipChoosingContainer = document.createElement('div');
-        shipChoosingContainer.id = 'ship-choosing-container';
+        shipChoosingContainer.id = 'init-ship-container';
 
         shipChoosingContainer.append(createShipContainer(), createRotateButton());
 
@@ -152,9 +185,9 @@ const ui = (() => {
         return buttonContainer;
     };
 
-    const createShipPlacingBoardContainer = () => {
+    const createInitBoardContainer = () => {
         const placingBoardContainer = document.createElement('div');
-        placingBoardContainer.id = 'ship-container';
+        placingBoardContainer.id = 'init-board-container';
 
         placingBoardContainer.append(createBoard('init-board', 10), createButtonContainer());
 
@@ -165,7 +198,7 @@ const ui = (() => {
         const content = document.createElement('div');
         content.classList.add('content-init');
 
-        content.append(createShipChoosingContainer(), createShipPlacingBoardContainer());
+        content.append(createInitShipContainer(), createInitBoardContainer());
 
         return content;
     };
@@ -368,7 +401,8 @@ const ui = (() => {
         setGameoverUI,
         clearBoard,
         setNewGameUI,
-        markShipAreaToHit
+        markShipAreaToHit,
+        toggleShipDirection
     };
 })();
 

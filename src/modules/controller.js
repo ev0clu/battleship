@@ -67,6 +67,13 @@ const controller = (() => {
         });
     };
 
+    const rotateButtonEventListener = () => {
+        const rotateButton = document.getElementById('btn-rotate');
+        rotateButton.addEventListener('click', () => {
+            ui.toggleShipDirection();
+        });
+    };
+
     const resetButtonEventListener = () => {
         const resetButton = document.getElementById('btn-reset');
         resetButton.addEventListener('click', () => {
@@ -108,6 +115,7 @@ const controller = (() => {
 
     const renderInitPage = () => {
         ui.createInitPage();
+        rotateButtonEventListener();
         resetButtonEventListener();
         randomButtonEventListener();
         startButtonEventListener();
