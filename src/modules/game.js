@@ -57,12 +57,12 @@ const game = (() => {
     const isShipSunk = (board, x, y) => {
         if (board === 'player') {
             if (playerGameboard.board[x][y].ship.isSunk()) {
-                playerGameboard.shipSunk(x, y);
+                playerGameboard.setShipAreaToHit(x, y);
                 return true;
             }
         } else if (board === 'computer') {
             if (computerGameboard.board[x][y].ship.isSunk()) {
-                computerGameboard.shipSunk(x, y);
+                computerGameboard.setShipAreaToHit(x, y);
                 return true;
             }
         }
@@ -72,7 +72,9 @@ const game = (() => {
         if (board === 'player') {
             return playerGameboard.receiveAttack(x, y);
         }
-        return computerGameboard.receiveAttack(x, y);
+        if (board === 'computer') {
+            return computerGameboard.receiveAttack(x, y);
+        }
     };
 
     const isGameOver = () => {

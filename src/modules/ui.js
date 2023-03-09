@@ -240,7 +240,7 @@ const ui = (() => {
         });
     };
 
-    const markShipAround = (boardSelector, board) => {
+    const markShipAreaToHit = (boardSelector, board) => {
         const cellPlayerBoard = document.querySelectorAll('.cell-player-board');
         const cellComputerBoard = document.querySelectorAll('.cell-computer-board');
         let cell = '';
@@ -368,7 +368,7 @@ const ui = (() => {
         setGameoverUI,
         clearBoard,
         setNewGameUI,
-        markShipAround
+        markShipAreaToHit
     };
 })();
 

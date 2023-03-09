@@ -15,7 +15,7 @@ const controller = (() => {
                     if (game.isShipHit('player', coordinates.x, coordinates.y)) {
                         cell.classList.add('hit');
                         if (game.isShipSunk('player', coordinates.x, coordinates.y)) {
-                            ui.markShipAround('player', game.getGameBoard('player'));
+                            ui.markShipAreaToHit('player', game.getGameBoard('player'));
                         }
 
                         if (game.isGameOver()) {
@@ -44,7 +44,7 @@ const controller = (() => {
                         if (game.isShipHit('computer', x, y)) {
                             event.target.classList.add('hit');
                             if (game.isShipSunk('computer', x, y)) {
-                                ui.markShipAround('computer', game.getGameBoard('computer'));
+                                ui.markShipAreaToHit('computer', game.getGameBoard('computer'));
                             }
 
                             if (game.isGameOver()) {

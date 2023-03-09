@@ -214,7 +214,7 @@ const Gameboard = () => {
         return false;
     };
 
-    const shipSunk = (x, y) => {
+    const setShipAreaToHit = (x, y) => {
         const index = board[x][y].shipIndex;
         const shipLength = board[x][y].ship.length;
 
@@ -351,7 +351,7 @@ const Gameboard = () => {
         placeShipVertical,
         placeShipHorizontal,
         receiveAttack,
-        shipSunk,
+        setShipAreaToHit,
         isAllShipsSunk,
         randomPlaceShip
     };
