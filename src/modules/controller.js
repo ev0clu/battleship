@@ -1,4 +1,5 @@
-import ui from './ui';
+import elementDOM from './ui/elementDOM';
+import ui from './ui/ui';
 import game from './game';
 
 const controller = (() => {
@@ -88,7 +89,7 @@ const controller = (() => {
             ui.clearBoard('init');
             game.resetGameboards();
             game.generateShipRandomCoordinates('player');
-            ui.addShipToGameBoard('init', game.getGameBoard('player'));
+            ui.addShipToBoard('init', game.getGameBoard('player'));
         });
     };
 
@@ -97,8 +98,8 @@ const controller = (() => {
         startButton.addEventListener('click', () => {
             ui.toggleUI();
             game.generateShipRandomCoordinates('computer');
-            ui.addShipToGameBoard('player', game.getGameBoard('player'));
-            ui.addShipToGameBoard('computer', game.getGameBoard('computer'));
+            ui.addShipToBoard('player', game.getGameBoard('player'));
+            ui.addShipToBoard('computer', game.getGameBoard('computer'));
             ui.clearBoard('init');
         });
     };
@@ -114,7 +115,7 @@ const controller = (() => {
     };
 
     const renderInitPage = () => {
-        ui.createInitPage();
+        elementDOM.createUI();
         rotateButtonEventListener();
         resetButtonEventListener();
         randomButtonEventListener();

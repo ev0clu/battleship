@@ -1,6 +1,6 @@
-import github from '../assets/images/github-logo.png';
+import github from '../../assets/images/github-logo.png';
 
-const ui = (() => {
+const elementDOM = (() => {
     const createHeader = () => {
         const header = document.createElement('header');
 
@@ -28,13 +28,6 @@ const ui = (() => {
         return gameBoardContainer;
     };
 
-    const showWinnerInformaion = (winner) => {
-        const winnerInfo = document.getElementById('winner-info');
-        winnerInfo.textContent = winner;
-
-        return winnerInfo;
-    };
-
     const createWinnerInformaion = () => {
         const winnerInfo = document.createElement('div');
         winnerInfo.id = 'winner-info';
@@ -48,16 +41,6 @@ const ui = (() => {
         turnInfo.textContent = 'Your turn';
 
         return turnInfo;
-    };
-
-    const toggleCursorStatus = () => {
-        const computerBoard = document.getElementById('computer-board');
-        computerBoard.classList.toggle('board-inactive');
-    };
-
-    const toggleRestartButton = () => {
-        const restartButton = document.getElementById('btn-restart');
-        restartButton.classList.toggle('btn-restart-inactive');
     };
 
     const createRestartButton = () => {
@@ -95,20 +78,10 @@ const ui = (() => {
         return content;
     };
 
-    const toggleShipDirection = () => {
-        const shipDragContainer = document.querySelector('.ship-drag-container');
-        const shipContainer = document.querySelectorAll('.ship-container');
-
-        shipDragContainer.classList.toggle('drag-container-toggle');
-
-        shipContainer.forEach((element) => {
-            element.classList.toggle('ship-container-toggle');
-        });
-    };
-
     const createShip = (length) => {
         const ship = document.createElement('div');
         ship.setAttribute('class', 'ship-container ');
+        ship.setAttribute('draggable', true);
 
         for (let i = 0; i < length; i++) {
             const shipCell = document.createElement('div');
@@ -242,150 +215,7 @@ const ui = (() => {
         return footer;
     };
 
-    const addShipToGameBoard = (boardSelector, board) => {
-        const cellPlayerBoard = document.querySelectorAll('.cell-player-board');
-        const cellComputerBoard = document.querySelectorAll('.cell-computer-board');
-        const cellInitBoard = document.querySelectorAll('.cell-init-board');
-        let cell = '';
-
-        if (boardSelector === 'player') {
-            cell = cellPlayerBoard;
-        } else if (boardSelector === 'computer') {
-            cell = cellComputerBoard;
-        } else if (boardSelector === 'init') {
-            cell = cellInitBoard;
-        }
-
-        board.forEach((row) => {
-            row.forEach((column) => {
-                if (column.isShip) {
-                    for (let i = 0; i < cell.length; i++) {
-                        if (
-                            Number(cell[i].getAttribute('data-x')) === column.x &&
-                            Number(cell[i].getAttribute('data-y')) === column.y
-                        ) {
-                            cell[i].classList.add('ship');
-                            break;
-                        }
-                    }
-                }
-            });
-        });
-    };
-
-    const markShipAreaToHit = (boardSelector, board) => {
-        const cellPlayerBoard = document.querySelectorAll('.cell-player-board');
-        const cellComputerBoard = document.querySelectorAll('.cell-computer-board');
-        let cell = '';
-
-        if (boardSelector === 'player') {
-            cell = cellPlayerBoard;
-        } else if (boardSelector === 'computer') {
-            cell = cellComputerBoard;
-        }
-        board.forEach((row) => {
-            row.forEach((column) => {
-                if (!column.isShip && column.isHit) {
-                    for (let i = 0; i < cell.length; i++) {
-                        if (
-                            Number(cell[i].getAttribute('data-x')) === column.x &&
-                            Number(cell[i].getAttribute('data-y')) === column.y
-                        ) {
-                            cell[i].classList.add('miss');
-                            break;
-                        }
-                    }
-                }
-            });
-        });
-    };
-
-    const changeTurnInformation = (turn) => {
-        const turnInfo = document.getElementById('turn-info');
-        turnInfo.textContent = '';
-        if (turn === 'player') {
-            turnInfo.textContent = 'Your Turn';
-        } else if (turn === 'computer') {
-            turnInfo.textContent = 'Computer Turn';
-        } else if (turn === 'over') {
-            turnInfo.textContent = 'Game Over';
-        }
-    };
-
-    const setGameoverUI = (winner) => {
-        changeTurnInformation('over');
-        if (winner === 'player') {
-            showWinnerInformaion('You won!');
-        } else {
-            showWinnerInformaion('Computer won!');
-        }
-        toggleRestartButton();
-        toggleCursorStatus();
-    };
-
-    const clearBoard = (board) => {
-        if (board === 'init') {
-            const cellInitBoard = document.querySelectorAll('.cell-init-board');
-
-            cellInitBoard.forEach((cell) => {
-                if (cell.classList.contains('ship')) {
-                    cell.classList.remove('ship');
-                }
-                if (cell.classList.contains('hit')) {
-                    cell.classList.remove('hit');
-                }
-                if (cell.classList.contains('miss')) {
-                    cell.classList.remove('miss');
-                }
-            });
-        }
-        if (board === 'game') {
-            const cellPlayerBoard = document.querySelectorAll('.cell-player-board');
-            const cellComputerBoard = document.querySelectorAll('.cell-computer-board');
-
-            cellPlayerBoard.forEach((cell) => {
-                if (cell.classList.contains('ship')) {
-                    cell.classList.remove('ship');
-                }
-                if (cell.classList.contains('hit')) {
-                    cell.classList.remove('hit');
-                }
-                if (cell.classList.contains('miss')) {
-                    cell.classList.remove('miss');
-                }
-            });
-
-            cellComputerBoard.forEach((cell) => {
-                if (cell.classList.contains('ship')) {
-                    cell.classList.remove('ship');
-                }
-                if (cell.classList.contains('hit')) {
-                    cell.classList.remove('hit');
-                }
-                if (cell.classList.contains('miss')) {
-                    cell.classList.remove('miss');
-                }
-            });
-        }
-    };
-
-    const setNewGameUI = () => {
-        toggleRestartButton();
-        toggleCursorStatus();
-        clearBoard();
-        changeTurnInformation('player');
-        showWinnerInformaion('');
-    };
-
-    const toggleUI = () => {
-        const gameUI = document.querySelector('.content-game');
-        const initUI = document.querySelector('.content-init');
-
-        gameUI.classList.toggle('inactive');
-        initUI.classList.toggle('inactive');
-    };
-
-    const createInitPage = () => {
+    const createUI = () => {
         const body = document.querySelector('body');
         body.append(createHeader(), createMain(), createFooter());
 
@@ -394,16 +224,8 @@ const ui = (() => {
     };
 
     return {
-        createInitPage,
-        toggleUI,
-        addShipToGameBoard,
-        changeTurnInformation,
-        setGameoverUI,
-        clearBoard,
-        setNewGameUI,
-        markShipAreaToHit,
-        toggleShipDirection
+        createUI
     };
 })();
 
-export default ui;
+export default elementDOM;
