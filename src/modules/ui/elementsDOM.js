@@ -1,6 +1,6 @@
 import github from '../../assets/images/github-logo.png';
 
-const elementDOM = (() => {
+const elementsDOM = (() => {
     const createHeader = () => {
         const header = document.createElement('header');
 
@@ -228,4 +228,4 @@ const elementDOM = (() => {
     };
 })();
 
-export default elementDOM;
+export default elementsDOM;

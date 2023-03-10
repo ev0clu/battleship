@@ -1,4 +1,4 @@
-import elementDOM from './ui/elementDOM';
+import elementsDOM from './ui/elementsDOM';
 import ui from './ui/ui';
 import game from './game';
 
@@ -114,8 +114,8 @@ const controller = (() => {
         });
     };
 
-    const renderInitPage = () => {
-        elementDOM.createUI();
+    const renderDOM = () => {
+        elementsDOM.createUI();
         rotateButtonEventListener();
         resetButtonEventListener();
         randomButtonEventListener();
@@ -124,7 +124,7 @@ const controller = (() => {
         playerEvent();
     };
 
-    return { renderInitPage };
+    return { renderDOM };
 })();
 
 export default controller;
