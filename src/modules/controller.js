@@ -1,6 +1,7 @@
+import game from './game';
 import elementsDOM from './ui/elementsDOM';
 import ui from './ui/ui';
-import game from './game';
+import dragdrop from './ui/dragdrop';
 
 const controller = (() => {
     const computerEvent = () => {
@@ -79,7 +80,8 @@ const controller = (() => {
         const resetButton = document.getElementById('btn-reset');
         resetButton.addEventListener('click', () => {
             ui.clearBoard('init');
-            game.resetGameboards();
+            dragdrop.handleDragDropEventListener();
+            //game.resetGameboards();
         });
     };
 
@@ -122,6 +124,7 @@ const controller = (() => {
         startButtonEventListener();
         restartButtonEventListener();
         playerEvent();
+        dragdrop.handleDragDropEventListener();
     };
 
     return { renderDOM };

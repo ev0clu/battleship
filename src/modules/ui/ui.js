@@ -1,3 +1,5 @@
+import elementsDOM from './elementsDOM';
+
 const ui = (() => {
     const showWinnerInformaion = (winner) => {
         const winnerInfo = document.getElementById('winner-info');
@@ -16,13 +18,14 @@ const ui = (() => {
 
     const toggleShipDirection = () => {
         const shipDragContainer = document.querySelector('.ship-drag-container');
-        const shipContainer = document.querySelectorAll('.ship-container');
 
-        shipDragContainer.classList.toggle('drag-container-toggle');
+        shipDragContainer.classList.toggle('drag-container-vertical');
+        shipDragContainer.classList.toggle('drag-container-horizontal');
 
-        shipContainer.forEach((element) => {
-            element.classList.toggle('ship-container-toggle');
-        });
+        for (let i = 0; i < shipDragContainer.childNodes.length; i++) {
+            shipDragContainer.children[i].classList.toggle('ship-vertical');
+            shipDragContainer.children[i].classList.toggle('ship-horizontal');
+        }
     };
 
     const addShipToBoard = (boardSelector, board) => {
@@ -108,19 +111,8 @@ const ui = (() => {
 
     const clearBoard = (board) => {
         if (board === 'init') {
-            const cellInitBoard = document.querySelectorAll('.cell-init-board');
-
-            cellInitBoard.forEach((cell) => {
-                if (cell.classList.contains('ship')) {
-                    cell.classList.remove('ship');
-                }
-                if (cell.classList.contains('hit')) {
-                    cell.classList.remove('hit');
-                }
-                if (cell.classList.contains('miss')) {
-                    cell.classList.remove('miss');
-                }
-            });
+            elementsDOM.resetInitBoard();
+            elementsDOM.resetShipContainer();
         }
         if (board === 'game') {
             const cellPlayerBoard = document.querySelectorAll('.cell-player-board');

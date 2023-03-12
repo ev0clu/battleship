@@ -13,19 +13,19 @@ const elementsDOM = (() => {
     };
 
     const createBoard = (id, boardSize) => {
-        const gameBoardContainer = document.createElement('div');
-        gameBoardContainer.id = id;
+        const boardContainer = document.createElement('div');
+        boardContainer.id = id;
         for (let i = 0; i < boardSize; i++) {
             for (let j = 0; j < boardSize; j++) {
                 const gridCell = document.createElement('div');
                 gridCell.setAttribute('class', `cell-${id}`);
                 gridCell.setAttribute('data-x', `${i}`);
                 gridCell.setAttribute('data-y', `${j}`);
-                gameBoardContainer.appendChild(gridCell);
+                boardContainer.appendChild(gridCell);
             }
         }
 
-        return gameBoardContainer;
+        return boardContainer;
     };
 
     const createWinnerInformaion = () => {
@@ -78,10 +78,12 @@ const elementsDOM = (() => {
         return content;
     };
 
-    const createShip = (length) => {
+    const createShip = (id, length) => {
         const ship = document.createElement('div');
-        ship.setAttribute('class', 'ship-container ');
+        ship.setAttribute('id', `${id}`);
+        ship.setAttribute('class', 'ship-container ship-horizontal');
         ship.setAttribute('draggable', true);
+        ship.setAttribute('data-width', `${length}`);
 
         for (let i = 0; i < length; i++) {
             const shipCell = document.createElement('div');
@@ -98,11 +100,26 @@ const elementsDOM = (() => {
         shipContainer.setAttribute('class', 'ship-drag-container');
 
         shipContainer.append(
-            createShip(5),
-            createShip(4),
-            createShip(3),
-            createShip(3),
-            createShip(2)
+            createShip('carrier', 5),
+            createShip('battleship', 4),
+            createShip('destroyer', 3),
+            createShip('submarine', 3),
+            createShip('patrol', 2)
+        );
+
+        return shipContainer;
+    };
+
+    const resetShipContainer = () => {
+        const shipContainer = document.querySelector('.ship-drag-container');
+        shipContainer.textContent = '';
+
+        shipContainer.append(
+            createShip('carrier', 5),
+            createShip('battleship', 4),
+            createShip('destroyer', 3),
+            createShip('submarine', 3),
+            createShip('patrol', 2)
         );
 
         return shipContainer;
@@ -167,6 +184,16 @@ const elementsDOM = (() => {
         return placingBoardContainer;
     };
 
+    const resetInitBoard = () => {
+        const initBoardContainer = document.getElementById('init-board-container');
+        initBoardContainer.removeChild(initBoardContainer.firstChild);
+
+        initBoardContainer.insertBefore(
+            createBoard('init-board', 10),
+            initBoardContainer.firstChild
+        );
+    };
+
     const createInitUI = () => {
         const content = document.createElement('div');
         content.classList.add('content-init');
@@ -224,7 +251,9 @@ const elementsDOM = (() => {
     };
 
     return {
-        createUI
+        createUI,
+        resetShipContainer,
+        resetInitBoard
     };
 })();
 
