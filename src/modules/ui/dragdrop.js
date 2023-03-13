@@ -1,19 +1,19 @@
 const dragdrop = (() => {
     let dragSrcEl = null;
 
-    const setShipLocationActive = (parentCell, shipCell) => {
-        const x = Number(parentCell.getAttribute('data-x'));
-        const y = Number(parentCell.getAttribute('data-y'));
-        const shipLength = shipCell.getAttribute('data-width');
+    const setShipLocationActive = (parentNode, shipNode) => {
+        const x = Number(parentNode.getAttribute('data-x'));
+        const y = Number(parentNode.getAttribute('data-y'));
+        const shipLength = Number(shipNode.getAttribute('data-width'));
 
-        if (shipCell.classList.contains('ship-vertical')) {
+        if (shipNode.classList.contains('ship-vertical')) {
             for (let i = 0; i < shipLength; i++) {
                 const cell = document.querySelector(
                     `.cell-init-board[data-x="${x + i}"][data-y="${y}"]`
                 );
                 cell.classList.add('ship-active-vertical');
             }
-        } else if (shipCell.classList.contains('ship-horizontal')) {
+        } else if (shipNode.classList.contains('ship-horizontal')) {
             for (let i = 0; i < shipLength; i++) {
                 const cell = document.querySelector(
                     `.cell-init-board[data-x="${x}"][data-y="${y + i}"]`
@@ -23,19 +23,19 @@ const dragdrop = (() => {
         }
     };
 
-    const removeShipLocationActive = (parentCell, shipCell) => {
-        const x = Number(parentCell.getAttribute('data-x'));
-        const y = Number(parentCell.getAttribute('data-y'));
-        const shipLength = shipCell.getAttribute('data-width');
+    const removeShipLocationActive = (parentNode, shipNode) => {
+        const x = Number(parentNode.getAttribute('data-x'));
+        const y = Number(parentNode.getAttribute('data-y'));
+        const shipLength = Number(shipNode.getAttribute('data-width'));
 
-        if (parentCell.classList.contains('ship-active-vertical')) {
+        if (parentNode.classList.contains('ship-active-vertical')) {
             for (let i = 0; i < shipLength; i++) {
                 const cell = document.querySelector(
                     `.cell-init-board[data-x="${x + i}"][data-y="${y}"]`
                 );
                 cell.classList.remove('ship-active-vertical');
             }
-        } else if (parentCell.classList.contains('ship-active-horizontal')) {
+        } else if (parentNode.classList.contains('ship-active-horizontal')) {
             for (let i = 0; i < shipLength; i++) {
                 const cell = document.querySelector(
                     `.cell-init-board[data-x="${x}"][data-y="${y + i}"]`
@@ -45,115 +45,73 @@ const dragdrop = (() => {
         }
     };
 
-    const toggleShipAreaReserved = (x, y) => {
-        const index = board[x][y].shipIndex;
-        const shipLength = board[x][y].ship.length;
+    const canDropShip = (parentNode, shipNode) => {
+        const x = Number(parentNode.getAttribute('data-x'));
+        const y = Number(parentNode.getAttribute('data-y'));
+        const shipLength = Number(shipNode.getAttribute('data-width'));
+        let direction = '';
+        const boardSize = 10;
 
-        if (board[x][y].direction === 'vertical') {
-            const shipUp = x - index - 1;
-            const shipDown = x + shipLength - index;
-            if (shipUp >= 0 && shipDown < boardSize) {
-                board[shipUp][y].isHit = true;
-                board[shipDown][y].isHit = true;
-                for (let i = 0; i <= shipLength + 1; i++) {
-                    if (y - 1 >= 0) {
-                        board[shipUp + i][y - 1].isHit = true;
-                    }
-                    if (y + 1 < boardSize) {
-                        board[shipUp + i][y + 1].isHit = true;
-                    }
-                }
-            }
-            if (shipUp < 0) {
-                board[shipDown][y].isHit = true;
-                for (let i = 0; i < shipLength + 1; i++) {
-                    if (y - 1 >= 0) {
-                        board[i][y - 1].isHit = true;
-                    }
-                    if (y + 1 < boardSize) {
-                        board[i][y + 1].isHit = true;
-                    }
-                }
-            }
-            if (shipDown >= boardSize) {
-                board[shipUp][y].isHit = true;
-                for (let i = 0; i < shipLength + 1; i++) {
-                    if (y - 1 >= 0) {
-                        board[shipUp + i][y - 1].isHit = true;
-                    }
-                    if (y + 1 < boardSize) {
-                        board[shipUp + i][y + 1].isHit = true;
-                    }
-                }
-            }
+        if (shipNode.classList.contains('ship-horizontal')) {
+            direction = 'horizontal';
+        } else if (shipNode.classList.contains('ship-vertical')) {
+            direction = 'vertical';
         }
 
-        if (board[x][y].direction === 'horizontal') {
-            const shipLeft = y - index - 1;
-            const shipRight = y + shipLength - index;
-            if (shipLeft >= 0 && shipRight < boardSize) {
-                board[x][shipLeft].isHit = true;
-                board[x][shipRight].isHit = true;
-                for (let i = 0; i <= shipLength + 1; i++) {
-                    if (x - 1 >= 0) {
-                        board[x - 1][shipLeft + i].isHit = true;
-                    }
-                    if (x + 1 < boardSize) {
-                        board[x + 1][shipLeft + i].isHit = true;
-                    }
-                }
-            }
-            if (shipLeft < 0) {
-                board[x][shipRight].isHit = true;
-                for (let i = 0; i < shipLength + 1; i++) {
-                    if (x - 1 >= 0) {
-                        board[x - 1][i].isHit = true;
-                    }
-                    if (x + 1 < boardSize) {
-                        board[x + 1][i].isHit = true;
-                    }
-                }
-            }
-            if (shipRight >= boardSize) {
-                board[x][shipLeft].isHit = true;
-                for (let i = 0; i < shipLength + 1; i++) {
-                    if (x - 1 >= 0) {
-                        board[x - 1][shipLeft + i].isHit = true;
-                    }
-                    if (x + 1 < boardSize) {
-                        board[x + 1][shipLeft + i].isHit = true;
-                    }
-                }
-            }
-        }
-    };
-
-    const canDropShip = (x, y, direction, newShip) => {
         let result = true;
         if (direction === 'vertical') {
             const shipUp = x - 1;
-            const shipDown = x + newShip.length;
+            const shipDown = x + shipLength;
 
-            if (x >= 0 && x <= boardSize - newShip.length && y >= 0 && y < boardSize) {
+            if (x >= 0 && x <= boardSize - shipLength && y >= 0 && y < boardSize) {
                 // check if ship placing location is free
-                for (let i = 0; i < newShip.length; i++) {
-                    if (board[x + i][y].isShip) {
+                for (let i = 0; i < shipLength; i++) {
+                    const cell = document.querySelector(
+                        `.cell-init-board[data-x="${x + i}"][data-y="${y}"]`
+                    );
+                    if (
+                        cell.classList.contains('ship-active-vertical') ||
+                        cell.classList.contains('ship-active-horizontal')
+                    ) {
                         result = false;
                         break;
                     }
                 }
 
                 if (shipUp >= 0 && shipDown < boardSize) {
-                    if (!board[shipUp][y].isShip && !board[shipDown][y].isShip) {
-                        for (let i = 0; i <= newShip.length + 1; i++) {
+                    const cellUp = document.querySelector(
+                        `.cell-init-board[data-x="${shipUp}"][data-y="${y}"]`
+                    );
+                    const cellDown = document.querySelector(
+                        `.cell-init-board[data-x="${shipDown}"][data-y="${y}"]`
+                    );
+                    if (
+                        !cellUp.classList.contains('ship-active-vertical') &&
+                        !cellDown.classList.contains('ship-active-vertical') &&
+                        !cellUp.classList.contains('ship-active-horizontal') &&
+                        !cellDown.classList.contains('ship-active-horizontal')
+                    ) {
+                        for (let i = 0; i <= shipLength + 1; i++) {
                             if (y - 1 >= 0) {
-                                if (board[shipUp + i][y - 1].isShip) {
+                                const cellLeftSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${shipUp + i}"][data-y="${y - 1}"]`
+                                );
+                                if (
+                                    cellLeftSweep.classList.contains('ship-active-vertical') ||
+                                    cellLeftSweep.classList.contains('ship-active-horizontal')
+                                ) {
                                     result = false;
                                     break;
                                 }
                             }
                             if (y + 1 < boardSize) {
-                                if (board[shipUp + i][y + 1].isShip) {
+                                const cellRightSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${shipUp + i}"][data-y="${y + 1}"]`
+                                );
+                                if (
+                                    cellRightSweep.classList.contains('ship-active-vertical') ||
+                                    cellRightSweep.classList.contains('ship-active-horizontal')
+                                ) {
                                     result = false;
                                     break;
                                 }
@@ -163,16 +121,34 @@ const dragdrop = (() => {
                         result = false;
                     }
                 } else if (shipUp === -1) {
-                    if (!board[shipDown][y].isShip) {
-                        for (let i = 0; i < newShip.length + 1; i++) {
+                    const cellDown = document.querySelector(
+                        `.cell-init-board[data-x="${shipDown}"][data-y="${y}"]`
+                    );
+                    if (
+                        !cellDown.classList.contains('ship-active-vertical') &&
+                        !cellDown.classList.contains('ship-active-horizontal')
+                    ) {
+                        for (let i = 0; i < shipLength + 1; i++) {
                             if (y - 1 >= 0) {
-                                if (board[i][y - 1].isShip) {
+                                const cellLeftSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${i}"][data-y="${y - 1}"]`
+                                );
+                                if (
+                                    cellLeftSweep.classList.contains('ship-active-vertical') ||
+                                    cellLeftSweep.classList.contains('ship-active-horizontal')
+                                ) {
                                     result = false;
                                     break;
                                 }
                             }
                             if (y + 1 < boardSize) {
-                                if (board[i][y + 1].isShip) {
+                                const cellRightSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${i}"][data-y="${y + 1}"]`
+                                );
+                                if (
+                                    cellRightSweep.classList.contains('ship-active-vertical') ||
+                                    cellRightSweep.classList.contains('ship-active-horizontal')
+                                ) {
                                     result = false;
                                     break;
                                 }
@@ -182,16 +158,34 @@ const dragdrop = (() => {
                         result = false;
                     }
                 } else if (shipDown === boardSize) {
-                    if (!board[shipUp][y].isShip) {
-                        for (let i = 0; i < newShip.length + 1; i++) {
+                    const cellUp = document.querySelector(
+                        `.cell-init-board[data-x="${shipUp}"][data-y="${y}"]`
+                    );
+                    if (
+                        !cellUp.classList.contains('ship-active-vertical') &&
+                        !cellUp.classList.contains('ship-active-horizontal')
+                    ) {
+                        for (let i = 0; i < shipLength + 1; i++) {
                             if (y - 1 >= 0) {
-                                if (board[shipUp + i][y - 1].isShip) {
+                                const cellLeftSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${shipUp + i}"][data-y="${y - 1}"]`
+                                );
+                                if (
+                                    cellLeftSweep.classList.contains('ship-active-vertical') ||
+                                    cellLeftSweep.classList.contains('ship-active-horizontal')
+                                ) {
                                     result = false;
                                     break;
                                 }
                             }
                             if (y + 1 < boardSize) {
-                                if (board[shipUp + i][y + 1].isShip) {
+                                const cellRightSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${shipUp + i}"][data-y="${y + 1}"]`
+                                );
+                                if (
+                                    cellRightSweep.classList.contains('ship-active-vertical') ||
+                                    cellRightSweep.classList.contains('ship-active-horizontal')
+                                ) {
                                     result = false;
                                     break;
                                 }
@@ -206,28 +200,57 @@ const dragdrop = (() => {
             }
         } else if (direction === 'horizontal') {
             const shipLeft = y - 1;
-            const shipRight = y + newShip.length;
+            const shipRight = y + shipLength;
 
-            if (x >= 0 && x < boardSize && y >= 0 && y <= boardSize - newShip.length) {
+            if (x >= 0 && x < boardSize && y >= 0 && y <= boardSize - shipLength) {
                 // check if ship placing location is free
-                for (let i = 0; i < newShip.length; i++) {
-                    if (board[x][y + i].isShip) {
+                for (let i = 0; i < shipLength; i++) {
+                    const cell = document.querySelector(
+                        `.cell-init-board[data-x="${x}"][data-y="${y + i}"]`
+                    );
+                    if (
+                        cell.classList.contains('ship-active-vertical') ||
+                        cell.classList.contains('ship-active-horizontal')
+                    ) {
                         result = false;
                         break;
                     }
                 }
 
                 if (shipLeft >= 0 && shipRight < boardSize) {
-                    if (!board[x][shipLeft].isShip && !board[x][shipRight].isShip) {
-                        for (let i = 0; i <= newShip.length + 1; i++) {
+                    const cellLeft = document.querySelector(
+                        `.cell-init-board[data-x="${x}"][data-y="${shipLeft}"]`
+                    );
+                    const cellRight = document.querySelector(
+                        `.cell-init-board[data-x="${x}"][data-y="${shipRight}"]`
+                    );
+                    if (
+                        !cellLeft.classList.contains('ship-active-vertical') &&
+                        !cellRight.classList.contains('ship-active-vertical') &&
+                        !cellLeft.classList.contains('ship-active-horizontal') &&
+                        !cellRight.classList.contains('ship-active-horizontal')
+                    ) {
+                        for (let i = 0; i <= shipLength + 1; i++) {
                             if (x - 1 >= 0) {
-                                if (board[x - 1][shipLeft + i].isShip) {
+                                const cellUpSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${x - 1}"][data-y="${shipLeft + i}"]`
+                                );
+                                if (
+                                    cellUpSweep.classList.contains('ship-active-vertical') ||
+                                    cellUpSweep.classList.contains('ship-active-horizontal')
+                                ) {
                                     result = false;
                                     break;
                                 }
                             }
                             if (x + 1 < boardSize) {
-                                if (board[x + 1][shipLeft + i].isShip) {
+                                const cellDownSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${x + 1}"][data-y="${shipLeft + i}"]`
+                                );
+                                if (
+                                    cellDownSweep.classList.contains('ship-active-vertical') ||
+                                    cellDownSweep.classList.contains('ship-active-horizontal')
+                                ) {
                                     result = false;
                                     break;
                                 }
@@ -237,16 +260,34 @@ const dragdrop = (() => {
                         result = false;
                     }
                 } else if (shipLeft === -1) {
-                    if (!board[x][shipRight].isShip) {
-                        for (let i = 0; i < newShip.length + 1; i++) {
+                    const cellRight = document.querySelector(
+                        `.cell-init-board[data-x="${x}"][data-y="${shipRight}"]`
+                    );
+                    if (
+                        !cellRight.classList.contains('ship-active-vertical') &&
+                        !cellRight.classList.contains('ship-active-horizontal')
+                    ) {
+                        for (let i = 0; i < shipLength + 1; i++) {
                             if (x - 1 >= 0) {
-                                if (board[x - 1][i].isShip) {
+                                const cellUpSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${x - 1}"][data-y="${i}"]`
+                                );
+                                if (
+                                    cellUpSweep.classList.contains('ship-active-vertical') ||
+                                    cellUpSweep.classList.contains('ship-active-horizontal')
+                                ) {
                                     result = false;
                                     break;
                                 }
                             }
                             if (x + 1 < boardSize) {
-                                if (board[x + 1][i].isShip) {
+                                const cellDownSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${x + 1}"][data-y="${i}"]`
+                                );
+                                if (
+                                    cellDownSweep.classList.contains('ship-active-vertical') ||
+                                    cellDownSweep.classList.contains('ship-active-horizontal')
+                                ) {
                                     result = false;
                                     break;
                                 }
@@ -256,16 +297,34 @@ const dragdrop = (() => {
                         result = false;
                     }
                 } else if (shipRight === boardSize) {
-                    if (!board[x][shipLeft].isShip) {
-                        for (let i = 0; i < newShip.length + 1; i++) {
+                    const cellLeft = document.querySelector(
+                        `.cell-init-board[data-x="${x}"][data-y="${shipLeft}"]`
+                    );
+                    if (
+                        !cellLeft.classList.contains('ship-active-vertical') &&
+                        !cellLeft.classList.contains('ship-active-horizontal')
+                    ) {
+                        for (let i = 0; i < shipLength + 1; i++) {
                             if (x - 1 >= 0) {
-                                if (board[x - 1][shipLeft + i].isShip) {
+                                const cellUpSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${x - 1}"][data-y="${shipLeft + i}"]`
+                                );
+                                if (
+                                    cellUpSweep.classList.contains('ship-active-vertical') ||
+                                    cellUpSweep.classList.contains('ship-active-horizontal')
+                                ) {
                                     result = false;
                                     break;
                                 }
                             }
                             if (x + 1 < boardSize) {
-                                if (board[x + 1][shipLeft + i].isShip) {
+                                const cellDownSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${x + 1}"][data-y="${shipLeft + i}"]`
+                                );
+                                if (
+                                    cellDownSweep.classList.contains('ship-active-vertical') ||
+                                    cellDownSweep.classList.contains('ship-active-horizontal')
+                                ) {
                                     result = false;
                                     break;
                                 }
@@ -315,10 +374,13 @@ const dragdrop = (() => {
 
         if (dragSrcEl !== this) {
             this.classList.remove('target-cell');
-            const targetID = e.dataTransfer.getData('text/plain');
-            const target = document.getElementById(`${targetID}`);
-            this.appendChild(target);
-            setShipLocationActive(this, target);
+            const shipID = e.dataTransfer.getData('text/plain');
+            const shipNode = document.getElementById(`${shipID}`);
+
+            if (canDropShip(this, shipNode)) {
+                this.appendChild(shipNode);
+                setShipLocationActive(this, shipNode);
+            }
         }
         return false;
     }

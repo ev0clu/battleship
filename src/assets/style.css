@@ -93,7 +93,7 @@ main {
     left: -2px;
     top: -2px;
     z-index: 20;
-    border: 0.5px solid black;
+    border: 1px solid black;
 }
 
 .drag-container-vertical {

@@ -88,7 +88,6 @@ const elementsDOM = (() => {
         for (let i = 0; i < length; i++) {
             const shipCell = document.createElement('div');
             shipCell.setAttribute('class', `cell-ship`);
-            shipCell.setAttribute('data-index', `${i}`);
             ship.appendChild(shipCell);
         }
 
@@ -121,8 +120,6 @@ const elementsDOM = (() => {
             createShip('submarine', 3),
             createShip('patrol', 2)
         );
-
-        return shipContainer;
     };
 
     const createRotateButton = () => {
