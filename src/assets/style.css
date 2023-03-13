@@ -73,7 +73,6 @@ main {
 
 .ship-drag-container {
     display: flex;
-    flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
     width: 19.4rem;
@@ -86,7 +85,6 @@ main {
 
 .ship-container {
     display: flex;
-    flex-direction: row;
     justify-content: flex-start;
     align-items: flex-start;
     position: relative;
@@ -96,7 +94,15 @@ main {
     border: 1px solid black;
 }
 
+.drag-container-horizontal {
+    flex-direction: column;
+}
+
 .drag-container-vertical {
+    flex-direction: row;
+}
+
+.ship-horizontal {
     flex-direction: row;
 }
 

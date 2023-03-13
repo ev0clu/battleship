@@ -96,7 +96,7 @@ const elementsDOM = (() => {
 
     const createShipContainer = () => {
         const shipContainer = document.createElement('div');
-        shipContainer.setAttribute('class', 'ship-drag-container');
+        shipContainer.setAttribute('class', 'ship-drag-container drag-container-horizontal');
 
         shipContainer.append(
             createShip('carrier', 5),
@@ -112,6 +112,11 @@ const elementsDOM = (() => {
     const resetShipContainer = () => {
         const shipContainer = document.querySelector('.ship-drag-container');
         shipContainer.textContent = '';
+
+        if (shipContainer.classList.contains('drag-container-vertical')) {
+            shipContainer.classList.remove('drag-container-vertical');
+            shipContainer.classList.add('drag-container-horizontal');
+        }
 
         shipContainer.append(
             createShip('carrier', 5),

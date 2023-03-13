@@ -19,12 +19,20 @@ const ui = (() => {
     const toggleShipDirection = () => {
         const shipDragContainer = document.querySelector('.ship-drag-container');
 
-        shipDragContainer.classList.toggle('drag-container-vertical');
-        shipDragContainer.classList.toggle('drag-container-horizontal');
-
-        for (let i = 0; i < shipDragContainer.childNodes.length; i++) {
-            shipDragContainer.children[i].classList.toggle('ship-vertical');
-            shipDragContainer.children[i].classList.toggle('ship-horizontal');
+        if (shipDragContainer.classList.contains('drag-container-horizontal')) {
+            shipDragContainer.classList.remove('drag-container-horizontal');
+            shipDragContainer.classList.add('drag-container-vertical');
+            for (let i = 0; i < shipDragContainer.childNodes.length; i++) {
+                shipDragContainer.children[i].classList.remove('ship-horizontal');
+                shipDragContainer.children[i].classList.add('ship-vertical');
+            }
+        } else if (shipDragContainer.classList.contains('drag-container-vertical')) {
+            shipDragContainer.classList.remove('drag-container-vertical');
+            shipDragContainer.classList.add('drag-container-horizontal');
+            for (let i = 0; i < shipDragContainer.childNodes.length; i++) {
+                shipDragContainer.children[i].classList.remove('ship-vertical');
+                shipDragContainer.children[i].classList.add('ship-horizontal');
+            }
         }
     };
 
