@@ -7,9 +7,10 @@
     --ship-color: #0e7490;
     --miss-color: #e0f2fe;
     --hit-color: #ef4444;
-    --button-restart-color: #1c1917;
-    --button-restart-color-hover: #44403c;
+    --button-color: #1c1917;
+    --button-color-hover: #44403c;
     --target-cell-color: #34d399;
+    --button-start-inactive-color: #d6d3d1;
 }
 
 * {
@@ -195,10 +196,19 @@ main {
     pointer-events: none;
 }
 
+.start-inactive {
+    pointer-events: none;
+    background-color: var(--button-start-inactive-color);
+}
+
+.start-active {
+    pointer-events: auto;
+    background-color: var(--button-color);
+}
+
 #btn-restart,
 #btn-reset,
 #btn-random,
-#btn-start,
 #btn-rotate {
     border: none;
     display: flex;
@@ -209,7 +219,20 @@ main {
     color: white;
     width: 7rem;
     height: 2.5rem;
-    background-color: var(--button-restart-color);
+    background-color: var(--button-color);
+    border-radius: 8px;
+}
+
+#btn-start {
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: white;
+    width: 7rem;
+    height: 2.5rem;
     border-radius: 8px;
 }
 
@@ -219,7 +242,7 @@ main {
 #btn-start:hover,
 #btn-rotate:hover {
     cursor: pointer;
-    background-color: var(--button-restart-color-hover);
+    background-color: var(--button-color-hover);
 }
 
 #btn-restart:active,

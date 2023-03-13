@@ -109,24 +109,6 @@ const elementsDOM = (() => {
         return shipContainer;
     };
 
-    const resetShipContainer = () => {
-        const shipContainer = document.querySelector('.ship-drag-container');
-        shipContainer.textContent = '';
-
-        if (shipContainer.classList.contains('drag-container-vertical')) {
-            shipContainer.classList.remove('drag-container-vertical');
-            shipContainer.classList.add('drag-container-horizontal');
-        }
-
-        shipContainer.append(
-            createShip('carrier', 5),
-            createShip('battleship', 4),
-            createShip('destroyer', 3),
-            createShip('submarine', 3),
-            createShip('patrol', 2)
-        );
-    };
-
     const createRotateButton = () => {
         const rotateButton = document.createElement('button');
         rotateButton.id = 'btn-rotate';
@@ -163,6 +145,7 @@ const elementsDOM = (() => {
     const createStartButton = () => {
         const startButton = document.createElement('button');
         startButton.id = 'btn-start';
+        startButton.classList.add('start-inactive');
         startButton.textContent = 'Start';
 
         return startButton;
@@ -184,16 +167,6 @@ const elementsDOM = (() => {
         placingBoardContainer.append(createBoard('init-board', 10), createButtonContainer());
 
         return placingBoardContainer;
-    };
-
-    const resetInitBoard = () => {
-        const initBoardContainer = document.getElementById('init-board-container');
-        initBoardContainer.removeChild(initBoardContainer.firstChild);
-
-        initBoardContainer.insertBefore(
-            createBoard('init-board', 10),
-            initBoardContainer.firstChild
-        );
     };
 
     const createInitUI = () => {
@@ -254,8 +227,8 @@ const elementsDOM = (() => {
 
     return {
         createUI,
-        resetShipContainer,
-        resetInitBoard
+        createShip,
+        createBoard
     };
 })();
 

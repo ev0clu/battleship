@@ -80,6 +80,7 @@ const controller = (() => {
         const resetButton = document.getElementById('btn-reset');
         resetButton.addEventListener('click', () => {
             ui.clearBoard('init');
+            ui.toggleStartButtonStatus('init');
             dragdrop.handleDragDropEventListener();
             //game.resetGameboards();
         });
@@ -89,6 +90,8 @@ const controller = (() => {
         const randomButton = document.getElementById('btn-random');
         randomButton.addEventListener('click', () => {
             ui.clearBoard('init');
+            ui.emptyShipDragContainer();
+            ui.toggleStartButtonStatus('init');
             game.resetGameboards();
             game.generateShipRandomCoordinates('player');
             ui.addShipToBoard('init', game.getGameBoard('player'));
@@ -111,7 +114,6 @@ const controller = (() => {
         restartButton.addEventListener('click', () => {
             ui.toggleUI();
             ui.setNewGameUI();
-            ui.clearBoard('game');
             game.resetGameboards();
         });
     };

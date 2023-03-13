@@ -117,10 +117,43 @@ const ui = (() => {
         toggleCursorStatus();
     };
 
+    const resetShipContainer = () => {
+        const shipContainer = document.querySelector('.ship-drag-container');
+        shipContainer.textContent = '';
+
+        if (shipContainer.classList.contains('drag-container-vertical')) {
+            shipContainer.classList.remove('drag-container-vertical');
+            shipContainer.classList.add('drag-container-horizontal');
+        }
+
+        shipContainer.append(
+            elementsDOM.createShip('carrier', 5),
+            elementsDOM.createShip('battleship', 4),
+            elementsDOM.createShip('destroyer', 3),
+            elementsDOM.createShip('submarine', 3),
+            elementsDOM.createShip('patrol', 2)
+        );
+    };
+
+    const resetInitBoard = () => {
+        const initBoardContainer = document.getElementById('init-board-container');
+        initBoardContainer.removeChild(initBoardContainer.firstChild);
+
+        initBoardContainer.insertBefore(
+            elementsDOM.createBoard('init-board', 10),
+            initBoardContainer.firstChild
+        );
+    };
+
+    const emptyShipDragContainer = () => {
+        const shipDragContainer = document.querySelector('.ship-drag-container');
+        shipDragContainer.textContent = '';
+    };
+
     const clearBoard = (board) => {
         if (board === 'init') {
-            elementsDOM.resetInitBoard();
-            elementsDOM.resetShipContainer();
+            resetInitBoard();
+            resetShipContainer();
         }
         if (board === 'game') {
             const cellPlayerBoard = document.querySelectorAll('.cell-player-board');
@@ -152,10 +185,37 @@ const ui = (() => {
         }
     };
 
+    const isAllShipDropped = () => {
+        const shipDragContainer = document.querySelector('.ship-drag-container');
+
+        if (shipDragContainer.childNodes.length === 0) {
+            return true;
+        }
+
+        return false;
+    };
+
+    const toggleStartButtonStatus = (reason) => {
+        const startButton = document.getElementById('btn-start');
+
+        if (reason === 'game') {
+            startButton.setAttribute('class', 'start-inactive');
+        } else if (reason === 'init') {
+            if (isAllShipDropped()) {
+                startButton.classList.remove('start-inactive');
+                startButton.classList.add('start-active');
+            } else {
+                startButton.classList.remove('start-active');
+                startButton.classList.add('start-inactive');
+            }
+        }
+    };
+
     const setNewGameUI = () => {
         toggleRestartButton();
         toggleCursorStatus();
-        clearBoard();
+        toggleStartButtonStatus('game');
+        clearBoard('game');
         changeTurnInformation('player');
         showWinnerInformaion('');
     };
@@ -168,6 +228,346 @@ const ui = (() => {
         initUI.classList.toggle('inactive');
     };
 
+    const setShipLocationActive = (parentNode, shipNode) => {
+        const x = Number(parentNode.getAttribute('data-x'));
+        const y = Number(parentNode.getAttribute('data-y'));
+        const shipLength = Number(shipNode.getAttribute('data-width'));
+
+        if (shipNode.classList.contains('ship-vertical')) {
+            for (let i = 0; i < shipLength; i++) {
+                const cell = document.querySelector(
+                    `.cell-init-board[data-x="${x + i}"][data-y="${y}"]`
+                );
+                cell.classList.add('ship-active-vertical');
+            }
+        } else if (shipNode.classList.contains('ship-horizontal')) {
+            for (let i = 0; i < shipLength; i++) {
+                const cell = document.querySelector(
+                    `.cell-init-board[data-x="${x}"][data-y="${y + i}"]`
+                );
+                cell.classList.add('ship-active-horizontal');
+            }
+        }
+    };
+
+    const removeShipLocationActive = (parentNode, shipNode) => {
+        const x = Number(parentNode.getAttribute('data-x'));
+        const y = Number(parentNode.getAttribute('data-y'));
+        const shipLength = Number(shipNode.getAttribute('data-width'));
+
+        if (parentNode.classList.contains('ship-active-vertical')) {
+            for (let i = 0; i < shipLength; i++) {
+                const cell = document.querySelector(
+                    `.cell-init-board[data-x="${x + i}"][data-y="${y}"]`
+                );
+                cell.classList.remove('ship-active-vertical');
+            }
+        } else if (parentNode.classList.contains('ship-active-horizontal')) {
+            for (let i = 0; i < shipLength; i++) {
+                const cell = document.querySelector(
+                    `.cell-init-board[data-x="${x}"][data-y="${y + i}"]`
+                );
+                cell.classList.remove('ship-active-horizontal');
+            }
+        }
+    };
+
+    const canDropShip = (parentNode, shipNode) => {
+        const x = Number(parentNode.getAttribute('data-x'));
+        const y = Number(parentNode.getAttribute('data-y'));
+        const shipLength = Number(shipNode.getAttribute('data-width'));
+        let direction = '';
+        const boardSize = 10;
+
+        if (shipNode.classList.contains('ship-horizontal')) {
+            direction = 'horizontal';
+        } else if (shipNode.classList.contains('ship-vertical')) {
+            direction = 'vertical';
+        }
+
+        let result = true;
+        if (direction === 'vertical') {
+            const shipUp = x - 1;
+            const shipDown = x + shipLength;
+
+            if (x >= 0 && x <= boardSize - shipLength && y >= 0 && y < boardSize) {
+                // check if ship placing location is free
+                for (let i = 0; i < shipLength; i++) {
+                    const cell = document.querySelector(
+                        `.cell-init-board[data-x="${x + i}"][data-y="${y}"]`
+                    );
+                    if (
+                        cell.classList.contains('ship-active-vertical') ||
+                        cell.classList.contains('ship-active-horizontal')
+                    ) {
+                        result = false;
+                        break;
+                    }
+                }
+
+                if (shipUp >= 0 && shipDown < boardSize) {
+                    const cellUp = document.querySelector(
+                        `.cell-init-board[data-x="${shipUp}"][data-y="${y}"]`
+                    );
+                    const cellDown = document.querySelector(
+                        `.cell-init-board[data-x="${shipDown}"][data-y="${y}"]`
+                    );
+                    if (
+                        !cellUp.classList.contains('ship-active-vertical') &&
+                        !cellDown.classList.contains('ship-active-vertical') &&
+                        !cellUp.classList.contains('ship-active-horizontal') &&
+                        !cellDown.classList.contains('ship-active-horizontal')
+                    ) {
+                        for (let i = 0; i <= shipLength + 1; i++) {
+                            if (y - 1 >= 0) {
+                                const cellLeftSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${shipUp + i}"][data-y="${y - 1}"]`
+                                );
+                                if (
+                                    cellLeftSweep.classList.contains('ship-active-vertical') ||
+                                    cellLeftSweep.classList.contains('ship-active-horizontal')
+                                ) {
+                                    result = false;
+                                    break;
+                                }
+                            }
+                            if (y + 1 < boardSize) {
+                                const cellRightSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${shipUp + i}"][data-y="${y + 1}"]`
+                                );
+                                if (
+                                    cellRightSweep.classList.contains('ship-active-vertical') ||
+                                    cellRightSweep.classList.contains('ship-active-horizontal')
+                                ) {
+                                    result = false;
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+                        result = false;
+                    }
+                } else if (shipUp === -1) {
+                    const cellDown = document.querySelector(
+                        `.cell-init-board[data-x="${shipDown}"][data-y="${y}"]`
+                    );
+                    if (
+                        !cellDown.classList.contains('ship-active-vertical') &&
+                        !cellDown.classList.contains('ship-active-horizontal')
+                    ) {
+                        for (let i = 0; i < shipLength + 1; i++) {
+                            if (y - 1 >= 0) {
+                                const cellLeftSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${i}"][data-y="${y - 1}"]`
+                                );
+                                if (
+                                    cellLeftSweep.classList.contains('ship-active-vertical') ||
+                                    cellLeftSweep.classList.contains('ship-active-horizontal')
+                                ) {
+                                    result = false;
+                                    break;
+                                }
+                            }
+                            if (y + 1 < boardSize) {
+                                const cellRightSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${i}"][data-y="${y + 1}"]`
+                                );
+                                if (
+                                    cellRightSweep.classList.contains('ship-active-vertical') ||
+                                    cellRightSweep.classList.contains('ship-active-horizontal')
+                                ) {
+                                    result = false;
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+                        result = false;
+                    }
+                } else if (shipDown === boardSize) {
+                    const cellUp = document.querySelector(
+                        `.cell-init-board[data-x="${shipUp}"][data-y="${y}"]`
+                    );
+                    if (
+                        !cellUp.classList.contains('ship-active-vertical') &&
+                        !cellUp.classList.contains('ship-active-horizontal')
+                    ) {
+                        for (let i = 0; i < shipLength + 1; i++) {
+                            if (y - 1 >= 0) {
+                                const cellLeftSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${shipUp + i}"][data-y="${y - 1}"]`
+                                );
+                                if (
+                                    cellLeftSweep.classList.contains('ship-active-vertical') ||
+                                    cellLeftSweep.classList.contains('ship-active-horizontal')
+                                ) {
+                                    result = false;
+                                    break;
+                                }
+                            }
+                            if (y + 1 < boardSize) {
+                                const cellRightSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${shipUp + i}"][data-y="${y + 1}"]`
+                                );
+                                if (
+                                    cellRightSweep.classList.contains('ship-active-vertical') ||
+                                    cellRightSweep.classList.contains('ship-active-horizontal')
+                                ) {
+                                    result = false;
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+                        result = false;
+                    }
+                }
+            } else {
+                result = false;
+            }
+        } else if (direction === 'horizontal') {
+            const shipLeft = y - 1;
+            const shipRight = y + shipLength;
+
+            if (x >= 0 && x < boardSize && y >= 0 && y <= boardSize - shipLength) {
+                // check if ship placing location is free
+                for (let i = 0; i < shipLength; i++) {
+                    const cell = document.querySelector(
+                        `.cell-init-board[data-x="${x}"][data-y="${y + i}"]`
+                    );
+                    if (
+                        cell.classList.contains('ship-active-vertical') ||
+                        cell.classList.contains('ship-active-horizontal')
+                    ) {
+                        result = false;
+                        break;
+                    }
+                }
+
+                if (shipLeft >= 0 && shipRight < boardSize) {
+                    const cellLeft = document.querySelector(
+                        `.cell-init-board[data-x="${x}"][data-y="${shipLeft}"]`
+                    );
+                    const cellRight = document.querySelector(
+                        `.cell-init-board[data-x="${x}"][data-y="${shipRight}"]`
+                    );
+                    if (
+                        !cellLeft.classList.contains('ship-active-vertical') &&
+                        !cellRight.classList.contains('ship-active-vertical') &&
+                        !cellLeft.classList.contains('ship-active-horizontal') &&
+                        !cellRight.classList.contains('ship-active-horizontal')
+                    ) {
+                        for (let i = 0; i <= shipLength + 1; i++) {
+                            if (x - 1 >= 0) {
+                                const cellUpSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${x - 1}"][data-y="${shipLeft + i}"]`
+                                );
+                                if (
+                                    cellUpSweep.classList.contains('ship-active-vertical') ||
+                                    cellUpSweep.classList.contains('ship-active-horizontal')
+                                ) {
+                                    result = false;
+                                    break;
+                                }
+                            }
+                            if (x + 1 < boardSize) {
+                                const cellDownSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${x + 1}"][data-y="${shipLeft + i}"]`
+                                );
+                                if (
+                                    cellDownSweep.classList.contains('ship-active-vertical') ||
+                                    cellDownSweep.classList.contains('ship-active-horizontal')
+                                ) {
+                                    result = false;
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+                        result = false;
+                    }
+                } else if (shipLeft === -1) {
+                    const cellRight = document.querySelector(
+                        `.cell-init-board[data-x="${x}"][data-y="${shipRight}"]`
+                    );
+                    if (
+                        !cellRight.classList.contains('ship-active-vertical') &&
+                        !cellRight.classList.contains('ship-active-horizontal')
+                    ) {
+                        for (let i = 0; i < shipLength + 1; i++) {
+                            if (x - 1 >= 0) {
+                                const cellUpSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${x - 1}"][data-y="${i}"]`
+                                );
+                                if (
+                                    cellUpSweep.classList.contains('ship-active-vertical') ||
+                                    cellUpSweep.classList.contains('ship-active-horizontal')
+                                ) {
+                                    result = false;
+                                    break;
+                                }
+                            }
+                            if (x + 1 < boardSize) {
+                                const cellDownSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${x + 1}"][data-y="${i}"]`
+                                );
+                                if (
+                                    cellDownSweep.classList.contains('ship-active-vertical') ||
+                                    cellDownSweep.classList.contains('ship-active-horizontal')
+                                ) {
+                                    result = false;
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+                        result = false;
+                    }
+                } else if (shipRight === boardSize) {
+                    const cellLeft = document.querySelector(
+                        `.cell-init-board[data-x="${x}"][data-y="${shipLeft}"]`
+                    );
+                    if (
+                        !cellLeft.classList.contains('ship-active-vertical') &&
+                        !cellLeft.classList.contains('ship-active-horizontal')
+                    ) {
+                        for (let i = 0; i < shipLength + 1; i++) {
+                            if (x - 1 >= 0) {
+                                const cellUpSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${x - 1}"][data-y="${shipLeft + i}"]`
+                                );
+                                if (
+                                    cellUpSweep.classList.contains('ship-active-vertical') ||
+                                    cellUpSweep.classList.contains('ship-active-horizontal')
+                                ) {
+                                    result = false;
+                                    break;
+                                }
+                            }
+                            if (x + 1 < boardSize) {
+                                const cellDownSweep = document.querySelector(
+                                    `.cell-init-board[data-x="${x + 1}"][data-y="${shipLeft + i}"]`
+                                );
+                                if (
+                                    cellDownSweep.classList.contains('ship-active-vertical') ||
+                                    cellDownSweep.classList.contains('ship-active-horizontal')
+                                ) {
+                                    result = false;
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+                        result = false;
+                    }
+                }
+            } else {
+                result = false;
+            }
+        }
+        return result;
+    };
+
     return {
         toggleUI,
         addShipToBoard,
@@ -176,7 +576,13 @@ const ui = (() => {
         clearBoard,
         setNewGameUI,
         markShipAreaToHit,
-        toggleShipDirection
+        toggleShipDirection,
+        setShipLocationActive,
+        removeShipLocationActive,
+        canDropShip,
+        isAllShipDropped,
+        emptyShipDragContainer,
+        toggleStartButtonStatus
     };
 })();
 
