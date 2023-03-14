@@ -2,6 +2,7 @@ import ui from './ui';
 
 const dragdrop = (() => {
     let dragSrcEl = null;
+    let isDrop = false;
 
     function handleDragStart(e) {
         this.style.opacity = '0.4';
@@ -12,6 +13,13 @@ const dragdrop = (() => {
         dragSrcEl = this;
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/plain', this.id);
+    }
+
+    function isDragDrop() {
+        if (isDrop) {
+            return true;
+        }
+        return false;
     }
 
     function handleDragEnd() {
@@ -46,6 +54,7 @@ const dragdrop = (() => {
             if (ui.isAllShipDropped()) {
                 ui.toggleStartButtonStatus('init');
             }
+            isDrop = true;
         }
         return false;
     }
@@ -65,7 +74,7 @@ const dragdrop = (() => {
         });
     };
 
-    return { handleDragDropEventListener };
+    return { handleDragDropEventListener, isDragDrop };
 })();
 
 export default dragdrop;

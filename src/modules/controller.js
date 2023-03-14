@@ -22,8 +22,9 @@ const controller = (() => {
 
                         if (game.isGameOver()) {
                             ui.setGameoverUI('computer');
+                        } else {
+                            computerEvent();
                         }
-                        computerEvent();
                     } else {
                         cell.classList.add('miss');
                         game.changeTurn();
@@ -81,8 +82,8 @@ const controller = (() => {
         resetButton.addEventListener('click', () => {
             ui.clearBoard('init');
             ui.toggleStartButtonStatus('init');
+            game.resetGameboards();
             dragdrop.handleDragDropEventListener();
-            //game.resetGameboards();
         });
     };
 
@@ -101,10 +102,14 @@ const controller = (() => {
     const startButtonEventListener = () => {
         const startButton = document.getElementById('btn-start');
         startButton.addEventListener('click', () => {
-            ui.toggleUI();
             game.generateShipRandomCoordinates('computer');
+            if (dragdrop.isDragDrop()) {
+                game.fillPlayerBoard();
+                console.log(game.getGameBoard('player'));
+            }
             ui.addShipToBoard('player', game.getGameBoard('player'));
             ui.addShipToBoard('computer', game.getGameBoard('computer'));
+            ui.toggleUI();
             ui.clearBoard('init');
         });
     };
@@ -112,9 +117,13 @@ const controller = (() => {
     const restartButtonEventListener = () => {
         const restartButton = document.getElementById('btn-restart');
         restartButton.addEventListener('click', () => {
-            ui.toggleUI();
             ui.setNewGameUI();
+            ui.toggleUI();
             game.resetGameboards();
+            if (!game.isPlayerTurn()) {
+                game.changeTurn();
+            }
+            dragdrop.handleDragDropEventListener();
         });
     };
 

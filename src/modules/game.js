@@ -118,6 +118,23 @@ const game = (() => {
         }
     };
 
+    const fillPlayerBoard = () => {
+        const cellInitBoard = document.querySelectorAll('.cell-init-board');
+        cellInitBoard.forEach((cell) => {
+            const x = Number(cell.getAttribute('data-x'));
+            const y = Number(cell.getAttribute('data-y'));
+
+            if (cell.childNodes.length > 0) {
+                const shipLength = Number(cell.firstChild.getAttribute('data-width'));
+                if (cell.classList.contains('ship-active-vertical')) {
+                    playerGameboard.placeShipVertical(x, y, Ship(shipLength));
+                } else if (cell.classList.contains('ship-active-horizontal')) {
+                    playerGameboard.placeShipHorizontal(x, y, Ship(shipLength));
+                }
+            }
+        });
+    };
+
     return {
         initGame,
         getGameBoard,
@@ -129,7 +146,8 @@ const game = (() => {
         isGameOver,
         computerRandomAttack,
         generateShipRandomCoordinates,
-        isShipSunk
+        isShipSunk,
+        fillPlayerBoard
     };
 })();
 
