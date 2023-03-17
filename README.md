@@ -6,6 +6,18 @@
 
 ## Features
 
+-   Player vs Computer mode
+-   Horizontal and vertical ship placement
+-   Random ship placement
+-   Drag and Drop ship placement (only for desktop device)
+-   Ship area is marked around in case of ship sunk
+-   Ships placement rule, need to skip 1 cell between each other
+-   Computer attacks based on random number generation
+-   Interactive board feedback
+-   Restart game option
+-   Dinamically generated page
+-   Mobile and tablet support
+
 ### Developement dependencies
 
 -   [Webpack](https://webpack.js.org/)
