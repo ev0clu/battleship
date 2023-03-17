@@ -107,7 +107,7 @@ const controller = (() => {
                 game.fillPlayerBoard();
             }
             ui.addShipToBoard('player', game.getGameBoard('player'));
-            ui.addShipToBoard('computer', game.getGameBoard('computer'));
+            //ui.addShipToBoard('computer', game.getGameBoard('computer'));
             ui.toggleUI();
             ui.clearBoard('init');
         });
