@@ -105,7 +105,6 @@ const controller = (() => {
             game.generateShipRandomCoordinates('computer');
             if (dragdrop.isDragDrop()) {
                 game.fillPlayerBoard();
-                console.log(game.getGameBoard('player'));
             }
             ui.addShipToBoard('player', game.getGameBoard('player'));
             ui.addShipToBoard('computer', game.getGameBoard('computer'));

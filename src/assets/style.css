@@ -306,7 +306,85 @@ footer {
 /* MEDIA QUERIES */
 
 @media (max-width: 1200px) {
+    header {
+        padding: 0.5rem 0 0.5rem 0;
+    }
+    header h1 {
+        font-size: 3rem;
+        letter-spacing: 0.2rem;
+    }
+
+    #init-ship-container {
+        display: none;
+    }
+
+    .content-game {
+        flex-direction: column;
+    }
+
+    #middle-container {
+        flex-direction: row;
+        gap: 1rem;
+    }
+
+    #btn-restart {
+        width: 12rem;
+    }
 }
 
 @media (max-width: 750px) {
+    header {
+        padding: 0.5rem 0 0.5rem 0;
+    }
+    header h1 {
+        font-size: 3rem;
+        letter-spacing: 0.2rem;
+    }
+
+    #init-ship-container {
+        display: none;
+    }
+
+    .content-game {
+        flex-direction: column;
+    }
+
+    #middle-container {
+        flex-direction: row;
+        gap: 1rem;
+    }
+
+    #player-board,
+    #computer-board,
+    #init-board {
+        grid-template-columns: repeat(10, 1.8rem);
+        grid-template-rows: repeat(10, 1.8rem);
+    }
+
+    .miss::after,
+    .hit::after {
+        font-size: 1rem;
+    }
+
+    #btn-restart,
+    #btn-reset,
+    #btn-random,
+    #btn-rotate,
+    #btn-start {
+        font-size: 1rem;
+        width: 6rem;
+        height: 2rem;
+    }
+
+    #turn-info,
+    #winner-info {
+        height: 2rem;
+        width: 6rem;
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    main {
+        padding: 1rem 0 1rem 0;
+    }
 }
